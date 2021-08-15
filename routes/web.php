@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+
+    // $users = DB::table('users')->select()->get();
+    // $comments = DB::table('comments')->get();
+
+    $user = DB::table('users')
+            ->select(['name', 'email'])
+            ->where('id', 1)
+            ->get();
+    dump($user);
+
     return view('welcome');
 });
