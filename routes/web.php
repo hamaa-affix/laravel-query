@@ -23,7 +23,7 @@ Route::get('/', function () {
             ->select(['name', 'email'])
             ->where('id', 1)
             ->get();
-    dump($user);
+    dump($user); 
 
     return view('welcome');
 });
