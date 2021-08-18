@@ -1,9 +1,9 @@
 <?php
-;
-use App\Models\Comment;
-use Illuminate\Database\Seeder;
 
-class CommentSeeder extends Seeder
+use Illuminate\Database\Seeder;
+use App\Models\Resevation;
+
+class ResevationSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,6 +12,6 @@ class CommentSeeder extends Seeder
      */
     public function run()
     {
-        factory(Comment::class, 10)->create();
+        factory(Resevation::class, 10)->create();
     }
 }
