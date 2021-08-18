@@ -38,15 +38,25 @@ Route::get('/', function () {
     //     ['price', '<', 400]
     // ])
     // ->get();
-    $result = DB::table('users')
-            ->whereExists(function($query) {
-                $query->select('id')
-                    ->from('resevations')
-                    ->whereRow('resevations.user_id = users.id')
-                    ->where('check_in', '2020-05-30')
-                    ->limit(1);
-            })
-            ->get();
+    //paginationはreturnaが自動的にたjsonに変換される。
+    //$result = DB::table('comments')->paginate(3);
+    //$result = DB::table('comments')->simplePaginate(3);
+    $sortBy = null;
+    // $result = DB::table('rooms')
+    //             ->when($sortBy, function($q, $sortBy) {
+    //                 $q->orderBy($sortBy);
+    //             }, function ($q) {
+    //                 $q->orderBy('price');
+    //             })
+    //             ->get();
+    $result = DB::table('comments')
+            ->orderBy('id')
+            ->chunk(2, function ($comments) {
+                foreach($comments as $comment) {
+                    if($comment->id === 5) return false;
+                }
+            });
+
     dump($user, $result);
 
     return view('welcome');
