@@ -3,6 +3,9 @@
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use App\Models\Room;
+use App\Models\User;
+use App\Models\Comment;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,48 +19,31 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    $rooms = Room::where('id', 1)
+        ->first();
 
-    // $users = DB::table('users')->select()->get();
-    // $comments = DB::table('comments')->get();
+    $users = User::select('name', 'id')
+        ->addSelect(['worst_content' => Comment::select('content')
+            ->whereColumn('user_id', 'users.id')
+            ->orderBy('created_at', 'asc')
+            ->limit(1)
+        ])
+        ->get()
+        ->toArray();
 
-    $user = DB::table('users')
-            ->select(['name', 'email'])
-            ->where('id', 1)
-            ->get();
-    // $rooms = DB::table('rooms')
-    //         ->where('price', '<', 400)
-    //         ->orWhere(function($query) {
-    //             $query->where([
-    //                 ['room_size', '>', '1'],
-    //                 ['room_size', '<', 4]
-    //             ]);
-    //         })
-    //         ->get();
-    // $rooms = \App\Models\Room::where([
-    //     ['room_size', 2],
-    //     ['price', '<', 400]
-    // ])
-    // ->get();
-    //paginationはreturnaが自動的にたjsonに変換される。
-    //$result = DB::table('comments')->paginate(3);
-    //$result = DB::table('comments')->simplePaginate(3);
-    $sortBy = null;
-    // $result = DB::table('rooms')
-    //             ->when($sortBy, function($q, $sortBy) {
-    //                 $q->orderBy($sortBy);
-    //             }, function ($q) {
-    //                 $q->orderBy('price');
-    //             })
-    //             ->get();
-    $result = DB::table('comments')
-            ->orderBy('id')
-            ->chunk(2, function ($comments) {
-                foreach($comments as $comment) {
-                    if($comment->id === 5) return false;
-                }
-            });
+    $comments = Comment::all();
+    $results = $comments->map(function($comment) {
+        return $comment->content;
+    });
 
-    dump($user, $result);
+    // $data = [];
+    // foreach($results as $result) {
+    //     $data[] = [
+    //         'word' => $result[0]
+    //     ];
+    // }
+    ddd($results);
+   //dump($rooms->price, $users);
 
     return view('welcome');
 });
