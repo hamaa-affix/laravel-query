@@ -19,22 +19,30 @@ use App\Models\Comment;
 */
 
 Route::get('/', function () {
-    $rooms = Room::where('id', 1)
-        ->first();
+    // $rooms = Room::where('id', 1)
+    //     ->first();
 
-    $users = User::select('name', 'id')
-        ->addSelect(['worst_content' => Comment::select('content')
-            ->whereColumn('user_id', 'users.id')
-            ->orderBy('created_at', 'asc')
-            ->limit(1)
-        ])
-        ->get()
-        ->toArray();
+    // $users = User::select('name', 'id')
+    //     ->addSelect(['worst_content' => Comment::select('content')
+    //         ->whereColumn('user_id', 'users.id')
+    //         ->orderBy('created_at', 'asc')
+    //         ->limit(1)
+    //     ])
+    //     ->get()
+    //     ->toArray();
 
-    $comments = Comment::all();
-    $results = $comments->map(function($comment) {
-        return $comment->content;
-    });
+    // $comments = Comment::all();
+    // $results = $comments->map(function($comment) {
+    //     return $comment->content;
+    // });
+
+    // $result = Comment::create([
+    //     'user_id' => 19,
+    //     'content' => 'content contet',
+    // ]);
+
+    //$result = Comment::where('rating', 1)->delete();
+    $result = Comment::withTrashed()->get();
 
     // $data = [];
     // foreach($results as $result) {
@@ -42,7 +50,7 @@ Route::get('/', function () {
     //         'word' => $result[0]
     //     ];
     // }
-    ddd($results);
+    dump($result);
    //dump($rooms->price, $users);
 
     return view('welcome');
