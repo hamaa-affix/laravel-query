@@ -17,6 +17,7 @@ use App\Models\Comment;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/test', 'TestController@index');
 
 Route::get('/', function () {
     // $rooms = Room::where('id', 1)
@@ -42,7 +43,7 @@ Route::get('/', function () {
     // ]);
 
     //$result = Comment::where('rating', 1)->delete();
-    $result = Comment::withTrashed()->get();
+    //$result = Comment::withTrashed()->get();
 
     // $data = [];
     // foreach($results as $result) {
@@ -50,7 +51,7 @@ Route::get('/', function () {
     //         'word' => $result[0]
     //     ];
     // }
-    dump($result);
+    //dump($result);
    //dump($rooms->price, $users);
 
     return view('welcome');
