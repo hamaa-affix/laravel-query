@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Repositories\UserRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
@@ -32,6 +33,7 @@ class RegisterController extends Controller
      * @var string
      */
     protected $redirectTo = RouteServiceProvider::HOME;
+
 
     /**
      * Create a new controller instance.

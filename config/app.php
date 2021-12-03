@@ -1,5 +1,7 @@
 <?php
 
+use App\Providers\RepositoryServiceProvider;
+
 return [
 
     /*
@@ -123,6 +125,11 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+
+    /** default mail address */
+    'mail_from_address' => env('MAIL_FROM_ADDRESS'),
+    'accept_mail_address' => env('ACCEPT_MAIL_ADDRESS'),
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
@@ -175,7 +182,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
+        App\Providers\RepositoryServiceProvider::class,
+        App\Providers\ServiceClassProvider::class
     ],
 
     /*

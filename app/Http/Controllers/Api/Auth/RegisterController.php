@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Company;
+use App\Services\Interfaces\UserServiceInterface;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Providers\RouteServiceProvider;
@@ -15,6 +16,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Stmt\TryCatch;
+use Illuminate\Http\Response;
+
 
 class RegisterController extends Controller
 {
@@ -38,14 +41,20 @@ class RegisterController extends Controller
      */
     protected $redirectTo = RouteServiceProvider::HOME;
 
+    private UserServiceInterface $userService;
+
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct
+    (
+        UserServiceInterface $userServiceInterface
+    )
     {
         $this->middleware('guest');
+        $this->userService = $userServiceInterface;
     }
 
     /**
@@ -65,42 +74,6 @@ class RegisterController extends Controller
         ]);
     }
 
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @param Company $company
-     * @return \App\User
-     */
-    protected function create(array $data, Company $company)
-    {
-        return User::create([
-            'first_name' => $data['firstName'],
-            'last_name' => $data['lastName'],
-            'company_id' => $company->id,
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
-    }
-
-    /**
-     * 企業を検索して、見つからなければ、作成し返却します。
-     * @param int $campanyId
-     * @param array $companyData
-     * @return Company
-     */
-    protected function registerCampany(int $companyId = null, array $companyData): Company
-    {
-        Log::debug("会社登録開始", ['compant_data' => $companyData]);
-        $company = Company::find($companyId);
-
-        if(empty($company)) {
-            return Company::create($companyData);
-        }
-
-        return $company;
-    }
-
     public function register(Request $request)
     {
         $validate = $this->validator($request->all());
@@ -111,23 +84,22 @@ class RegisterController extends Controller
         }
         try {
             DB::transaction(function () use ($request) {
-                $company = [
-                    'name' => $request->companyName
-                ];
-                Log::debug("comapanyId", ['id' => $request->companyId]);
-                $company = $this->registerCampany($request->companyId, $company);
-                event(new Registered($user = $this->create($request->all(), $company)));
-
+                Log::debug("user登録開始");
+                $company = $this->userService->registerCompany($request->companyId, $request->all());
+                $user = $this->userService->registerUser($request->all(), $company->id);
                 Log::debug("user作成！", ['user' => $user]);
+
                 return response()->json([
-                    'message' => '登録しました'
-                ], 200);
+                    'message' => '登録しました',
+                    'status' => Response::HTTP_OK
+                ]);
             });
         } catch(\Throwable $e) {
             Log::error($e->getMessage());
             return response()->json([
-                'message' => '登録に失敗しました'
-            ], 500);
+                'message' => '登録に失敗しました',
+                'status' => Response::HTTP_INTERNAL_SERVER_ERROR
+            ]);
         }
 
     }

@@ -5,7 +5,7 @@ use App\Models\User;
 use App\Repositories\UserRepository\UserRepositoryInterFace;
 use Illuminate\Support\Collection;
 
-class UserRepository implements UserRepositoryInterFace
+class EloquentUserRepository implements UserRepositoryInterface
 {
 	/**
 	 * @param User
@@ -25,4 +25,15 @@ class UserRepository implements UserRepositoryInterFace
 	{
 		return $this->user->all();
 	}
+
+	/**
+	 * user登録を行います
+	 * @param array $userParams
+	 *@return User
+	 */
+	public function registerUser(array $userParams): User
+	{
+		return User::create($userParams);
+	}
 }
+//EloquentActivationStaffRepository
