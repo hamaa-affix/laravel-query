@@ -5,8 +5,10 @@ namespace App\Services;
 use App\Events\ContactRequestCompleted;
 use App\Models\User;
 use App\Models\Company;
-use App\Repositories\UserRepositoryInterface;
+use App\Services\Interfaces\UserServiceInterface;
+use App\Repositories\Interfaces\UserRepositoryInterface;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class UserService implements UserServiceInterface
 {
@@ -39,6 +41,7 @@ class UserService implements UserServiceInterface
 
         $createdUser = $this->userRepositoryInterface->registerUser($user);
 
+        Log::debug('mailの送信');
         event(new ContactRequestCompleted($createdUser));
 
         return $createdUser;
@@ -52,14 +55,15 @@ class UserService implements UserServiceInterface
 	 */
 	public function registerCompany(int $companyId = null, array $companyParams): Company
     {
-        $company = $company = [
-            'name' => $companyParams
+        $companyData = [
+            'name' => $companyParams['companyName']
         ];
 
         Log::debug("会社登録開始", ['compant_data' => $companyParams]);
         $company = Company::find($companyId);
+        Log::debug('会社の検索成功', ['company' => $company]);
 
-        if(empty($company)) return Company::create($company);
+        if(empty($company)) return Company::create($companyData);
 
         return $company;
     }

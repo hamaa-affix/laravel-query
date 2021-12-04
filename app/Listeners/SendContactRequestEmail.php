@@ -7,6 +7,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use App\Events\ContactRequestCompleted;
 use App\Mail\ContactMail;
 use Mail;
+use Illuminate\Support\Facades\Log;
 
 class SendContactRequestEmail
 {
@@ -29,8 +30,9 @@ class SendContactRequestEmail
      */
     public function handle(ContactRequestCompleted $event)
     {
-        $to_address_admin = config('app.accept_mail_address');
+        Log::debug('メール送信開始', ['user' => $event]);
         //送信した
         Mail::to($event->user->email)->send(new ContactMail($event->user));
+        Log::debug('メール送信終了');
     }
 }

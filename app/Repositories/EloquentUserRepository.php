@@ -1,8 +1,8 @@
 <?php
-namespace App\Repositories\UserRepository;
+namespace App\Repositories;
 
 use App\Models\User;
-use App\Repositories\UserRepository\UserRepositoryInterFace;
+use App\Repositories\Interfaces\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 
 class EloquentUserRepository implements UserRepositoryInterface

@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Repositories\EloquentUserRepository;
 
 /**
  * repositoryクラスの依存関係を定義するProvider
@@ -16,6 +18,7 @@ class RepositoryServiceProvider extends ServiceProvider
      * @var array
      */
     private const MODELS = [
+        'User'
     ];
 
     /**

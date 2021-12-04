@@ -74,33 +74,51 @@ class RegisterController extends Controller
         ]);
     }
 
-    public function register(Request $request)
-    {
-        $validate = $this->validator($request->all());
+    // public function register(Request $request)
+    // {
+    //     $validate = $this->validator($request->all());
 
-        //企業登録も行っちゃう。企業情報がなければ、後で保存する？？
-        if ($validate->fails()) {
-            return new JsonResponse($validate->errors());
-        }
-        try {
-            DB::transaction(function () use ($request) {
-                Log::debug("user登録開始");
-                $company = $this->userService->registerCompany($request->companyId, $request->all());
-                $user = $this->userService->registerUser($request->all(), $company->id);
-                Log::debug("user作成！", ['user' => $user]);
+    //     //企業登録も行っちゃう。企業情報がなければ、後で保存する？？
+    //     if ($validate->fails()) {
+    //         return new JsonResponse($validate->errors());
+    //     }
+    //     try {
+    //         DB::transaction(function () use ($request) {
+    //             Log::debug("user登録開始");
+    //             $company = $this->userService->registerCompany($request->companyId, $request->all());
+    //             $user = $this->userService->registerUser($request->all(), $company->id);
+    //             Log::debug("user作成！", ['user' => $user]);
+    //             Log::debug('トークン生成');
+    //             $token = $this->publishToken($request);
+    //             Log::debug('トークン生成完了', ['token' => $token]);
 
-                return response()->json([
-                    'message' => '登録しました',
-                    'status' => Response::HTTP_OK
-                ]);
-            });
-        } catch(\Throwable $e) {
-            Log::error($e->getMessage());
-            return response()->json([
-                'message' => '登録に失敗しました',
-                'status' => Response::HTTP_INTERNAL_SERVER_ERROR
-            ]);
-        }
+    //             return response()->json([
+    //                 'user' => $token,
+    //                 'message' => '登録しました',
+    //                 'status' => Response::HTTP_OK
+    //             ]);
+    //         });
+    //     } catch(\Throwable $e) {
+    //         Log::error($e->getMessage());
+    //         return response()->json([
+    //             'message' => '登録に失敗しました',
+    //             'status' => Response::HTTP_INTERNAL_SERVER_ERROR
+    //         ]);
+    //     }
 
-    }
+    // }
+
+    // protected function publishToken($request) {
+    //     $token = auth('api')->attempt(['email' => $request->email, 'password' => $request->password]);
+    //     return $this->respondWithToken($token);
+    // }
+
+    // protected function respondWithToken($token)
+    // {
+    //     return response()->json([
+    //         'access_token' => $token,
+    //         'token_type' => 'bearer',
+    //         'expires_in' => auth("api")->factory()->getTTL() * 60
+    //     ]);
+    // }
 }

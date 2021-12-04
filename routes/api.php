@@ -20,8 +20,8 @@ use Illuminate\Support\Facades\Route;
 //});
 
 Route::namespace('Api')->middleware('api')->group(function() {
-    Route::post('/register', 'Auth\RegisterController@register');
-    Route::post('/login', 'AuthenticateController@authenticate');
+    Route::post('/register', 'AuthenticateController@register');
+    Route::post('/login', 'AuthenticateController@login');
 
     Route::middleware('jwt.auth')->prefix('v1')->group(function () {
         // 認証が必要なメソッド
