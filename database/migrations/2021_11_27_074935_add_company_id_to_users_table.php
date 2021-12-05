@@ -14,12 +14,12 @@ class AddCompanyIdToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->unsignedBigInteger('company_id');
+            $table->unsignedBigInteger('company_id')->after('id');
 
             $table->foreign('company_id')
-                    ->references('id')
-                    ->on('images')
-                    ->onDelete('cascade');
+            ->references('id')
+            ->on('companies')
+            ->onDelete('cascade');
         });
     }
 

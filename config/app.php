@@ -1,5 +1,7 @@
 <?php
 
+use App\Providers\RepositoryServiceProvider;
+
 return [
 
     /*
@@ -123,6 +125,11 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+
+    /** default mail address */
+    'mail_from_address' => env('MAIL_FROM_ADDRESS'),
+    'accept_mail_address' => env('ACCEPT_MAIL_ADDRESS'),
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
@@ -161,6 +168,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -174,7 +182,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
+        App\Providers\RepositoryServiceProvider::class,
+        App\Providers\ServiceClassProvider::class
     ],
 
     /*
@@ -226,6 +235,8 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
+        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
 
     ],
 

@@ -15,18 +15,12 @@ class CreateCompaniesTable extends Migration
     {
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('image_id');
+            $table->unsignedBigInteger('image_id')->nullable();
             $table->string('name', 64)->comment('会社名');
             $table->string('subject', 1000)->nullable()->comment('会社概要');
             $table->string('company_url')->nullable()->comment('会社url');
             $table->timestamps();
             $table->softDeletes();
-
-            $table->foreign('image_id')
-                    ->references('id')
-                    ->on('images')
-                    ->onDelete('cascade');
-
         });
     }
 
