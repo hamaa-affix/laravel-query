@@ -28,9 +28,9 @@ class SendContactRequestEmail
      * @param  object  $event
      * @return void
      */
-    public function handle(ContactRequestCompleted $event)
+    public function handle($event)
     {
-        Log::debug('メール送信開始', ['user' => $event]);
+        Log::debug('メール送信開始', ['user' => $event->user->email]);
         //送信した
         Mail::to($event->user->email)->send(new ContactMail($event->user));
         Log::debug('メール送信終了');

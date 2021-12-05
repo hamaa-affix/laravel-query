@@ -11,6 +11,9 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Response;
+use App\Events\ContactRequestCompleted;
+
+use function Psy\debug;
 
 class AuthenticateController extends Controller {
 
@@ -34,13 +37,17 @@ class AuthenticateController extends Controller {
     {
         //企業登録も行っちゃう。企業情報がなければ、後で保存する？？
         try {
-            DB::beginTransaction();
-            $company = $this->userService->registerCompany($request->companyId, $request->all());
-            $user = $this->userService->registerUser($request->all(), $company->id);
-            $token = $this->publishToken($request);
-            DB::commit();
+            $user = DB::transaction(function () use($request ) {
+                $company = $this->userService->registerCompany($request->companyId, $request->all());
+                return $this->userService->registerUser($request->all(), $company->id);
+            });
+
+            if(!empty($user)) {
+                Log::debug('メール送信します');
+                event(new ContactRequestCompleted($user));
+                $token = $this->publishToken($request);
+            }
         } catch(\Throwable $e) {
-            DB::rollBack();
             Log::error($e->getMessage());
             return response()->json([
                 'message' => '登録に失敗しました',

@@ -41,9 +41,6 @@ class UserService implements UserServiceInterface
 
         $createdUser = $this->userRepositoryInterface->registerUser($user);
 
-        Log::debug('mailの送信');
-        event(new ContactRequestCompleted($createdUser));
-
         return $createdUser;
     }
 

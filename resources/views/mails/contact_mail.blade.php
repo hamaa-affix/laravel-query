@@ -7,7 +7,7 @@
 			登録完了しました。
 		</div>
 		<div>
-			<p>名前: {{ $user['name'] }}</p>
+			<p>名前: {{ $user['last_name'] }} - {{ $user['first_name'] }}</p>
 		</div>
 		<div>
 			<p>メールアドレス: {{ $user['email'] }}</p>
