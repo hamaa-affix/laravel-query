@@ -1,6 +1,4 @@
 <?php
-
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,19 +12,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-
-//});
-
-Route::namespace('Api')->middleware('api')->group(function() {
+Route::namespace('Api')->group(function() {
     Route::post('/register', 'AuthenticateController@register');
     Route::post('/login', 'AuthenticateController@login');
 
-    Route::middleware('jwt.auth')->prefix('v1')->group(function () {
+    Route::prefix('v1')->group(function () {
         // 認証が必要なメソッド
+        Route::post('/me', 'AuthenticateController@me');
+        Route::post('/logout', 'AuthenticateController@logout');
     });
 });
-// Route::group(["middleware" => "guest:api"], function() {
-//     Route::post('/login', 'AuthenticateController@authenticate');
-// });

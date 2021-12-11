@@ -17,7 +17,6 @@ use App\Models\Comment;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/test', 'TestController@index');
 
 Route::get('/', function () {
     // $rooms = Room::where('id', 1)
