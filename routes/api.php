@@ -16,7 +16,7 @@ Route::namespace('Api')->group(function() {
     Route::post('/register', 'AuthenticateController@register');
     Route::post('/login', 'AuthenticateController@login');
 
-    Route::prefix('v1')->group(function () {
+    Route::prefix('v1')->middleware('auth:api')->group(function () {
         // 認証が必要なメソッド
         Route::post('/me', 'AuthenticateController@me');
         Route::post('/logout', 'AuthenticateController@logout');
