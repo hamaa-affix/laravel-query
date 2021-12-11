@@ -30,6 +30,7 @@ services:
       - "3306:3306"
     volumes:
       - "./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf"
+      - db-query:/var/lib/mysql
     environment:
       MYSQL_DATABASE: laravel
       MYSQL_USER: query
@@ -42,3 +43,6 @@ services:
     container_name: redis
     ports:
     - "6379:6379"
+
+volumes:
+    db-query:
