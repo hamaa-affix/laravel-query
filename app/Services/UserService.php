@@ -7,8 +7,11 @@ use App\Models\User;
 use App\Models\Company;
 use App\Services\Interfaces\UserServiceInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Carbon;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserService implements UserServiceInterface
 {
@@ -26,42 +29,37 @@ class UserService implements UserServiceInterface
 	 * user登録を行い、メール送信を行います。
      * userが会員登録を行い、メールを受信する
      * @param array $userParams
-     * @param int $companyId
 	 *@return void
 	 */
-	public function registerUser(array $userParams, int $companyId): User
+	public function registerUser(array $userParams): User
     {
+        //birthdayをcarbonでパースする
+        $birthDay = Carbon::parse($userParams['birthDay']);
         $user = [
             'first_name' => $userParams['firstName'],
-            'last_name' => $userParams['lastName'],
-            'company_id' => $companyId,
-            'email' => $userParams['email'],
-            'password' => Hash::make($userParams['password']),
+            'last_name'  => $userParams['lastName'],
+            'birth_day'  => $birthDay,
+            'age'        => (int) $userParams['age'],
+            'attribute'  => (int) $userParams['attribute'],
+            'family_id'  => $userParams['family_id'] ?? null,
+            'email'      => $userParams['email'],
+            'password'   => Hash::make($userParams['password']),
         ];
 
-        $createdUser = $this->userRepositoryInterface->registerUser($user);
-
-        return $createdUser;
+        return $this->userRepositoryInterface->registerUser($user);
     }
 
     /**
-	 *userが企業登録を行う
-	 *@param int $companyId
-	 *@param array $companyParams
-	 *@return Company
-	 */
-	public function registerCompany(int $companyId = null, array $companyParams): Company
+	 * JWT tokeを元にuserのtokenの有効性を確かめます。
+	 * @param array $credentials
+	 * @return JsonResponse|string
+	 */ 
+	public function attemptTokenThenRedirectOrRunning(array $credentials): JsonResponse|string
     {
-        $companyData = [
-            'name' => $companyParams['companyName']
-        ];
+        if (! $token = JWTAuth::attempt($credentials)) {
+            return response()->json(['error' => 'invalid_credentials'], 401);
+        }
 
-        Log::debug("会社登録開始", ['compant_data' => $companyParams]);
-        $company = Company::find($companyId);
-        Log::debug('会社の検索成功', ['company' => $company]);
-
-        if(empty($company)) return Company::create($companyData);
-
-        return $company;
+        return $token;
     }
 }
