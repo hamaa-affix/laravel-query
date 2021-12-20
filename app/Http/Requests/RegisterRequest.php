@@ -30,14 +30,15 @@ class RegisterRequest extends FormRequest
             'lastName' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'companyName' => ['required', 'string', 'max:255']
+            'birth_day' => ['nullable', 'date'],
+            'age' => ['required', 'integer', 'regex:/^\d{1,10}$/'],
+            'attribute' => ['required', 'integer', 'regex:/^[0-2]$/']
         ];
     }
 
     protected function failedValidation(Validator $validator)
     {
         $res = response()->json([
-            'status' => 400,
             'errors' => $validator->errors(),
         ],400);
         throw new HttpResponseException($res);

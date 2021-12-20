@@ -36,11 +36,9 @@ class AuthenticateController extends Controller {
 
     public function register(RegisterRequest $request)
     {
-        //企業登録も行っちゃう。企業情報がなければ、後で保存する？？
         try {
             $user = DB::transaction(function () use($request ) {
-                $company = $this->userService->registerCompany($request->companyId, $request->all());
-                return $this->userService->registerUser($request->all(), $company->id);
+                return $this->userService->registerUser($request->all());
             });
 
             if(!empty($user)) {
@@ -112,7 +110,7 @@ class AuthenticateController extends Controller {
     public function logout()
     {
         try {
-            auth('api')->logout();
+            Auth::guard('api')->logout();
         } catch(JsonException $e) {
             Log::error($e->getMessage());
 

@@ -36,4 +36,4 @@ class EloquentUserRepository implements UserRepositoryInterface
 		return User::create($userParams);
 	}
 }
-//EloquentActivationStaffRepository
+
