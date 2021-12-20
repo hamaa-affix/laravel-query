@@ -110,7 +110,7 @@ class AuthenticateController extends Controller {
     public function logout()
     {
         try {
-            auth('api')->logout();
+            Auth::guard('api')->logout();
         } catch(JsonException $e) {
             Log::error($e->getMessage());
 
