@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('first_name')->comment('名');
             $table->string('last_name')->comment('苗字');
             $table->unsignedTinyInteger('age')->comment('年齢');
-            $table->dateTime('birthday')->comment('誕生日');
+            $table->dateTime('birthday')->nullable()->comment('誕生日');
             $table->tinyInteger('attribute')->comment('0: 父, 1: 母 3: 子');
             $table->string('email')->unique();
             $table->string('tel')->nullable()->comment('電話番号');

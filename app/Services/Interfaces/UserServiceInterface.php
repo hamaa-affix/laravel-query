@@ -2,6 +2,7 @@
 
 namespace App\Services\Interfaces;
 
+use App\Models\Family;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 
@@ -20,5 +21,4 @@ interface UserServiceInterface {
 	 * @return JsonResponse|string
 	 */ 
 	public function attemptTokenThenRedirectOrRunning(array $credentials): JsonResponse|string;
-
 }

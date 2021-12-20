@@ -7,13 +7,15 @@ use Illuminate\Http\Request;
 use App\Http\Requests\RegisterRequest;
 use App\Services\Interfaces\UserServiceInterface;
 use JWTAuth;
+use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Response;
 use App\Events\ContactRequestCompleted;
+use Exception;
+use JsonException;
 
-use function Psy\debug;
 
 class AuthenticateController extends Controller {
 
@@ -29,13 +31,11 @@ class AuthenticateController extends Controller {
         UserServiceInterface $userServiceInterface
     )
     {
-        $this->middleware('guest');
         $this->userService = $userServiceInterface;
     }
 
     public function register(RegisterRequest $request)
     {
-        //企業登録も行っちゃう。企業情報がなければ、後で保存する？？
         try {
             $user = DB::transaction(function () use($request ) {
                 return $this->userService->registerUser($request->all());
@@ -70,10 +70,11 @@ class AuthenticateController extends Controller {
         // grab credentials from the request
         $credentials = $request->only('email', 'password');
         try {
-        // attempt to verify the credentials and create a token for the user
+            //attempt to verify the credentials and create a token for the user
             if (! $token = JWTAuth::attempt($credentials)) {
                 return response()->json(['error' => 'invalid_credentials'], 401);
             }
+
         } catch (JWTException $e) {
         // something went wrong whilst attempting to encode the token
             return response()->json(['error' => 'could_not_create_token'], 500);
@@ -81,6 +82,47 @@ class AuthenticateController extends Controller {
 
         // all good so return the token
         return response()->json(compact('token'));
+    }
+
+    /**
+     * ログイン中のuser情報を返却します
+     */
+    public function me()
+    {
+        try {
+            $user = JWTAuth::parseToken()->authenticate();
+            Log::debug('user', ['user' => $user]);
+            if(empty($user)) new Exception('loginできていません');
+
+        } catch(\Throwable $e) {
+            Log::error($e->getMessage());
+            return response()->json([
+                'message' => $e->getMessage(),
+                'status' => Response::HTTP_FORBIDDEN
+            ]);
+        }
+        return response()->json([
+            'user' => $user,
+            'status' => Response::HTTP_OK
+        ]);
+    }
+
+    public function logout()
+    {
+        try {
+            auth('api')->logout();
+        } catch(JsonException $e) {
+            Log::error($e->getMessage());
+
+            return response()->json([
+                'message' => $e->getMessage(),
+                'status' => Response::HTTP_EXPECTATION_FAILED,
+            ]);
+        }
+
+        return response()->json([
+            'status' => Response::HTTP_OK
+        ]);
     }
 
 

@@ -38,7 +38,7 @@ class UserService implements UserServiceInterface
         $user = [
             'first_name' => $userParams['firstName'],
             'last_name'  => $userParams['lastName'],
-            'birth_day'  => $birthDay,
+            'birthday'  => $birthDay ?? null,
             'age'        => (int) $userParams['age'],
             'attribute'  => (int) $userParams['attribute'],
             'family_id'  => $userParams['family_id'] ?? null,
