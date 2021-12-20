@@ -63,4 +63,21 @@ class UserService implements UserServiceInterface
 
         return $token;
     }
+
+    
+    public function getProfile(): array
+    {
+        $user = $this->UserRepositoryInterface->fetchUser();
+        
+        return  [
+            'firstName' => $user->first_name,
+            'lastName' => $user->last_name,
+            'age' => $user->age,
+            'birthday' => $user->birthday,
+            'attribute' => $user->attribute,
+            'email' => $user->email,
+            'tel' => $user->tel,
+            'familyId' => $user->family_id 
+        ];
+    }
 }

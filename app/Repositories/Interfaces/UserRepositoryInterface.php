@@ -19,4 +19,11 @@ interface UserRepositoryInterface
 	 *@return User
 	 */
 	public function registerUser(array $userParams): User;
+
+	/**
+	 * 特定のuserを取得します。
+	 * @param int $userId
+	 * @return User
+	 */
+	public function fetchUser(int $userId): User;
 }

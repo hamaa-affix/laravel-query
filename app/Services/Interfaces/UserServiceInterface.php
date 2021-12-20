@@ -21,4 +21,10 @@ interface UserServiceInterface {
 	 * @return JsonResponse|string
 	 */ 
 	public function attemptTokenThenRedirectOrRunning(array $credentials): JsonResponse|string;
+
+	/**
+	 * userのデータをデータ形成し返却する。
+	 * @return array
+	 */
+	public function getProfile(): array;
 }

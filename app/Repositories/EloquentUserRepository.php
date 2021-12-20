@@ -35,5 +35,15 @@ class EloquentUserRepository implements UserRepositoryInterface
 	{
 		return User::create($userParams);
 	}
+
+	/**
+	 * 特定のuserを取得します。
+	 * @param int $userId
+	 * @return User
+	 */
+	public function fetchUser(int $userId): User
+	{
+		return User::find($userId);
+	}
 }
 
