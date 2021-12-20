@@ -34,7 +34,8 @@ class UserService implements UserServiceInterface
 	public function registerUser(array $userParams): User
     {
         //birthdayをcarbonでパースする
-        $birthDay = Carbon::parse($userParams['birthDay']);
+        if(isset($userParams['birthDay']))  $birthDay = Carbon::parse($userParams['birthDay']);
+        
         $user = [
             'first_name' => $userParams['firstName'],
             'last_name'  => $userParams['lastName'],
