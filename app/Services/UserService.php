@@ -70,8 +70,7 @@ class UserService implements UserServiceInterface
         $user = $this->UserRepositoryInterface->fetchUser();
         
         return  [
-            'firstName' => $user->first_name,
-            'lastName' => $user->last_name,
+            'fullName' => $user->last_name. $user->first_name,
             'age' => $user->age,
             'birthday' => $user->birthday,
             'attribute' => $user->attribute,
@@ -79,5 +78,25 @@ class UserService implements UserServiceInterface
             'tel' => $user->tel,
             'familyId' => $user->family_id 
         ];
+    }
+
+    /**
+     * userの情報を更新する
+     *
+     * @param array $requestData
+     * @return void
+     */
+    public function updateProfile(array $requestData): void
+    {
+        $user = [
+            'first_name' => $requestData['firstName'],
+            'last_name'  => $requestData['lastName'],
+            'birthday'  => $requestData['birthday'],
+            'age'        => (int) $requestData['age'],
+            'attribute'  => (int) $requestData['attribute'],
+            'email'      => $requestData['email'],
+        ];
+
+        $this->userRepositoryInterface->updataUser($user);
     }
 }

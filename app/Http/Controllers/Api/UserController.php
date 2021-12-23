@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -47,5 +48,26 @@ class UserController extends Controller
             'user' => $profile,
             'status' => Response::HTTP_OK
         ]);
+    }
+
+    public function updataProfile(Request $request)
+    {
+        try {
+            DB::transaction(function () use($request) {
+                $this->userService->updateProfile($request->all());
+            });
+        } catch(Exception $e) {
+            Log::error($e->getMessage());
+
+            return response()->json([
+                'message' =>  trans('message.error.user.update'),
+                'status' => Response::HTTP_INTERNAL_SERVER_ERROR
+            ]);
+        }
+
+        return response()->json([
+            'message' => trans('message.success.user.update'),
+            'status' => Response::HTTP_OK,
+        ])
     }
 }

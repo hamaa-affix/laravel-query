@@ -27,4 +27,12 @@ interface UserServiceInterface {
 	 * @return array
 	 */
 	public function getProfile(): array;
+
+	/**
+     * userの情報を更新する
+     *
+     * @param array $requestData
+     * @return void
+     */
+    public function updateProfile(array $requestData): void;
 }

@@ -26,4 +26,11 @@ interface UserRepositoryInterface
 	 * @return User
 	 */
 	public function fetchUser(int $userId): User;
+
+	/**
+	 * ユーザー情報を更新します
+	 * @param array $userData
+	 * @return void
+	 */
+	public function updataUser(array $userData): void;
 }

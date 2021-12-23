@@ -45,5 +45,15 @@ class EloquentUserRepository implements UserRepositoryInterface
 	{
 		return User::find($userId);
 	}
+
+	/**
+	 * ユーザー情報を更新します
+	 * @param array $userData
+	 * @return int
+	 */
+	public function updataUser(array $userData): void
+	{
+		User::updata($userData);
+	}
 }
 
