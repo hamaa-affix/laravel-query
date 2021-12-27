@@ -3,6 +3,7 @@
 namespace App\Repositories\Interfaces;
 use Illuminate\Support\Collection;
 use App\Models\User;
+use packages\Domain\UserModel;
 
 
 interface UserRepositoryInterface
@@ -33,4 +34,11 @@ interface UserRepositoryInterface
 	 * @return void
 	 */
 	public function updataUser(array $userData): void;
+
+	/**
+	 * 特定のuserを取得します。
+	 * @param int $userId
+	 * @return object UserModel
+	 */
+	public function find(int $userId): UserModel;
 }

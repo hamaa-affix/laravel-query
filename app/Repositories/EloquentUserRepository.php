@@ -4,6 +4,7 @@ namespace App\Repositories;
 use App\Models\User;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use Illuminate\Support\Collection;
+use packages\Domain\UserModel;
 
 class EloquentUserRepository implements UserRepositoryInterface
 {
@@ -54,6 +55,28 @@ class EloquentUserRepository implements UserRepositoryInterface
 	public function updataUser(array $userData): void
 	{
 		User::updata($userData);
+	}
+
+	/**
+	 * 特定のuserを取得します。
+	 * @param int $userId
+	 * @return object UserModel
+	 */
+	public function find(int $userId): UserModel
+	{
+		$user = $this->user->find($userId);
+
+		$userModel = new UserModel();
+		return $userModel->reconstruct(
+			$user->id,
+			$user->first_name,
+			$user->last_name,
+			$user->age,
+			$user->tel,
+			$user->email,
+			$user->password,
+			$user->attribute
+		);
 	}
 }
 
