@@ -30,10 +30,8 @@ class UserController extends Controller
     public function getProfileAtUser()
     {
         try {
-            $user = JWTAuth::parseToken()->authenticate();
+            $user = auth()->user();
             $profile = $this->userService->getProfile($user->id);
-
-            if(empty($user)) new Exception('権限ありません');
 
         } catch(Exception $e) {
             Log::error($e->getMessage());
@@ -53,9 +51,12 @@ class UserController extends Controller
     public function updataProfile(Request $request)
     {
         try {
-            DB::transaction(function () use($request) {
-                $this->userService->updateProfile($request->all());
+            $user = auth()->user();
+
+            DB::transaction(function () use($request, $user) {
+                $this->userService->updateProfile($request->all(), $user->id);
             });
+
         } catch(Exception $e) {
             Log::error($e->getMessage());
 

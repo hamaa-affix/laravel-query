@@ -64,10 +64,15 @@ class UserService implements UserServiceInterface
         return $token;
     }
 
-    
-    public function getProfile(): array
+    /**
+     * userのプロフィール情報返却します。
+     *
+     * @param integer $userId
+     * @return array
+     */
+    public function getProfile(int $userId): array
     {
-        $user = $this->UserRepositoryInterface->fetchUser();
+        $user = $this->userRepositoryInterface->fetchUser($userId);
         
         return  [
             'fullName' => $user->last_name. $user->first_name,
@@ -84,9 +89,10 @@ class UserService implements UserServiceInterface
      * userの情報を更新する
      *
      * @param array $requestData
+     * @param int $userId
      * @return void
      */
-    public function updateProfile(array $requestData): void
+    public function updateProfile(array $requestData, int $userId): void
     {
         $user = [
             'first_name' => $requestData['firstName'],
@@ -97,6 +103,6 @@ class UserService implements UserServiceInterface
             'email'      => $requestData['email'],
         ];
 
-        $this->userRepositoryInterface->updataUser($user);
+        $this->userRepositoryInterface->updateUser($user, $userId);
     }
 }

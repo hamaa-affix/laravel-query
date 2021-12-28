@@ -31,9 +31,10 @@ interface UserRepositoryInterface
 	/**
 	 * ユーザー情報を更新します
 	 * @param array $userData
+	 * @paran int $userId
 	 * @return void
 	 */
-	public function updataUser(array $userData): void;
+	public function updateUser(array $userData, int $userid): void;
 
 	/**
 	 * 特定のuserを取得します。

@@ -2,7 +2,6 @@
 
 namespace packages\Domain\Entities\User;
 
-use Attribute;
 use Illuminate\Support\Facades\Hash;
 use packages\Domain\ValueObjects\EmailAddress;
 use packages\Domain\ValueObjects\TelephoneNumber;

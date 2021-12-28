@@ -5,6 +5,7 @@
 use App\Models\User;
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,19 +20,13 @@ use Illuminate\Support\Str;
 
 $factory->define(User::class, function (Faker $faker) {
     return [
-        'name' => $faker->name,
-        'email' => $faker->unique()->safeEmail,
-        'email_verified_at' => now(),
-        'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+        'first_name' => $faker->firstName,
+        'last_name' => $faker->lastName,
+        'age' => rand(20, 45),
+        'attribute' => rand(0, 2),
+        'tel' => $faker->phoneNumber,
+        'email' => $faker->email,
+        'password' => Hash::make($faker->password()),
         'remember_token' => Str::random(10),
-        'meta' => [
-            'settings' => [
-                'site_background' => 'black',
-                'site_language' => 'en',
-            ],
-            'skills' => $faker->randomElements(['Laraavel', 'php7', 'wordpress', 'html5', 'CSS', 'reactJs'], mt_rand(1,6)),
-            'gender' => $faker->randomElement(['Male', 'Famale', 'Other ;)'])
-        ]
     ];
 });
- 
