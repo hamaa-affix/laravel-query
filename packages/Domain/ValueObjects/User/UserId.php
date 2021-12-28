@@ -6,7 +6,7 @@ use Exception;
 
 class UserId
 {
-    /** @var $userId */
+    /** @var int $userId */
     private int $userId;
 
     public function __construct(int $userId)
@@ -54,5 +54,14 @@ class UserId
     public static function isInt(int $userId): bool
     {
         return is_int($userId);
+    }
+
+    /**
+     *getter
+     * @return integer
+     */
+    public function getId(): int
+    {
+        return $this->userId;
     }
 }

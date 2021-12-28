@@ -4,6 +4,7 @@ namespace App\Repositories\Interfaces;
 use Illuminate\Support\Collection;
 use App\Models\User;
 use packages\Domain\Entities\User\UserModel;
+use packages\Domain\ValueObjects\User\UserId;
 
 
 interface UserRepositoryInterface
@@ -38,8 +39,8 @@ interface UserRepositoryInterface
 
 	/**
 	 * 特定のuserを取得します。
-	 * @param int $userId
+	 * @param UserId $userId
 	 * @return object UserModel
 	 */
-	public function find(int $userId): UserModel;
+	public function find(UserId $userId): UserModel;
 }

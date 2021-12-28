@@ -5,6 +5,7 @@ use App\Models\User;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use packages\Domain\Entities\User\UserModel;
+use packages\Domain\ValueObjects\User\UserId;
 
 class EloquentUserRepository implements UserRepositoryInterface
 {
@@ -63,7 +64,7 @@ class EloquentUserRepository implements UserRepositoryInterface
 	 * @param int $userId
 	 * @return object UserModel
 	 */
-	public function find(int $userId): UserModel
+	public function find(UserId $userId): UserModel
 	{
 		$user = $this->user->find($userId);
 
