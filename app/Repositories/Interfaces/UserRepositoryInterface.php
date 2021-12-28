@@ -3,7 +3,7 @@
 namespace App\Repositories\Interfaces;
 use Illuminate\Support\Collection;
 use App\Models\User;
-use packages\Domain\UserModel;
+use packages\Domain\Entities\User\UserModel;
 
 
 interface UserRepositoryInterface
