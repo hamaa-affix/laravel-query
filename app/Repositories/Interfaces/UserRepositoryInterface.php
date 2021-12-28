@@ -3,6 +3,8 @@
 namespace App\Repositories\Interfaces;
 use Illuminate\Support\Collection;
 use App\Models\User;
+use packages\Domain\Entities\User\UserModel;
+use packages\Domain\ValueObjects\User\UserId;
 
 
 interface UserRepositoryInterface
@@ -19,4 +21,26 @@ interface UserRepositoryInterface
 	 *@return User
 	 */
 	public function registerUser(array $userParams): User;
+
+	/**
+	 * 特定のuserを取得します。
+	 * @param int $userId
+	 * @return User
+	 */
+	public function fetchUser(int $userId): User;
+
+	/**
+	 * ユーザー情報を更新します
+	 * @param array $userData
+	 * @paran int $userId
+	 * @return void
+	 */
+	public function updateUser(array $userData, int $userid): void;
+
+	/**
+	 * 特定のuserを取得します。
+	 * @param UserId $userId
+	 * @return object UserModel
+	 */
+	public function find(UserId $userId): UserModel;
 }

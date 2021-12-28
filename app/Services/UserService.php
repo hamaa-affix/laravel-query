@@ -63,4 +63,46 @@ class UserService implements UserServiceInterface
 
         return $token;
     }
+
+    /**
+     * userのプロフィール情報返却します。
+     *
+     * @param integer $userId
+     * @return array
+     */
+    public function getProfile(int $userId): array
+    {
+        $user = $this->userRepositoryInterface->fetchUser($userId);
+        
+        return  [
+            'fullName' => $user->last_name. $user->first_name,
+            'age' => $user->age,
+            'birthday' => $user->birthday,
+            'attribute' => $user->attribute,
+            'email' => $user->email,
+            'tel' => $user->tel,
+            'familyId' => $user->family_id 
+        ];
+    }
+
+    /**
+     * userの情報を更新する
+     *
+     * @param array $requestData
+     * @param int $userId
+     * @return void
+     */
+    public function updateProfile(array $requestData, int $userId): void
+    {
+        $user = [
+            'first_name' => $requestData['firstName'],
+            'last_name'  => $requestData['lastName'],
+            'birthday'  => $requestData['birthday'],
+            'age'        => (int) $requestData['age'],
+            'attribute'  => (int) $requestData['attribute'],
+            'email'      => $requestData['email'],
+        ];
+
+        $this->userRepositoryInterface->updateUser($user, $userId);
+    }
 }
