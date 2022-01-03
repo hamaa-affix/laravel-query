@@ -15,7 +15,6 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('family_id')->nullable()->comment('家族Id');
             $table->string('first_name')->comment('名');
             $table->string('last_name')->comment('苗字');
             $table->unsignedTinyInteger('age')->comment('年齢');
@@ -23,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->tinyInteger('attribute')->comment('0: 父, 1: 母 3: 子');
             $table->string('email')->unique();
             $table->string('tel')->nullable()->comment('電話番号');
+            $table->string('comment')->nullable()->comment('紹介文');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
