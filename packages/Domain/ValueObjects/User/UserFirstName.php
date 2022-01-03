@@ -36,4 +36,9 @@ class UserFirstName
     {
         return !! $userFirstName < 65; 
     }
+
+    public function getFirstName(): string
+    {
+        return $this->userFirstName;
+    }
 }

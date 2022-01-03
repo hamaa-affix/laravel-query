@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Carbon;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use packages\Domain\ValueObjects\User\UserFirstName;
+use packages\Domain\ValueObjects\User\UserId;
 
 class UserService implements UserServiceInterface
 {
@@ -39,11 +41,12 @@ class UserService implements UserServiceInterface
         $user = [
             'first_name' => $userParams['firstName'],
             'last_name'  => $userParams['lastName'],
-            'birthday'  => $birthDay ?? null,
+            'birthday'   => $birthDay ?? null,
             'age'        => (int) $userParams['age'],
             'attribute'  => (int) $userParams['attribute'],
             'family_id'  => $userParams['family_id'] ?? null,
             'email'      => $userParams['email'],
+            'comment'    => $userParams['comment'] ?? null,
             'password'   => Hash::make($userParams['password']),
         ];
 
@@ -81,7 +84,6 @@ class UserService implements UserServiceInterface
             'attribute' => $user->attribute,
             'email' => $user->email,
             'tel' => $user->tel,
-            'familyId' => $user->family_id 
         ];
     }
 
@@ -97,12 +99,97 @@ class UserService implements UserServiceInterface
         $user = [
             'first_name' => $requestData['firstName'],
             'last_name'  => $requestData['lastName'],
-            'birthday'  => $requestData['birthday'],
+            'birthday'   => $requestData['birthday'],
             'age'        => (int) $requestData['age'],
             'attribute'  => (int) $requestData['attribute'],
             'email'      => $requestData['email'],
+            'comment'    => $requestData['comment']
         ];
 
+        $this->userRepositoryInterface->updateUser($user, $userId);
+    }
+
+    /**
+	 * userの名前を更新する
+	 * @param UserFirstName $userfirstName
+     * @param 
+	 * @return void
+	 */
+	public function updateUserFirstName(UserFirstName $userfirstName, UserId $userId): void
+    {
+        $user = [ 'first_name' => $userfirstName->getFirstName()];
+        $this->userRepositoryInterface->updateUser($user, $userId->getId());
+    }
+
+	/**
+	 * userの苗字を更新する
+	 * @param string $userLastName
+     * @param int $userId
+	 * @return void
+	 */
+	public function updateUserLastName(string $userLastName, int $userId): void
+    {
+        $user = ['last_name' => $userLastName];
+        $this->userRepositoryInterface->updateUser($user, $userId);
+    }
+
+	/**
+	 * userの電話番号を更新する
+	 * @param string $userTel
+     * @param int $userId
+	 * @return void
+	 */
+	public function updateUserTel(string $userTel, int $userId): void
+    {
+        $user = ['last_name' => $userTel];
+        $this->userRepositoryInterface->updateUser($user, $userId);
+    }
+
+	/**
+	 * userのemailを更新する
+	 * @param string $userEmail
+     * @param int $userId
+	 * @return void
+	 */
+	public function updateUserEmail(string $userEmail, int $userId): void
+    {
+        $user = ['last_name' => $userEmail];
+        $this->userRepositoryInterface->updateUser($user, $userId);
+    }
+
+	/**
+	 * userの年齢を更新する
+	 * @param int $userAge
+     * @param int $userId
+	 * @return void
+	 */
+	public function updateUserAge(int $userAge, int $userId): void
+    {
+        $user = ['last_name' => $userAge];
+        $this->userRepositoryInterface->updateUser($user, $userId);
+    }
+
+	/**
+	 * userの誕生日を更新する
+	 * @param string $userBirthday
+     * @param int $userId
+	 * @return void
+	 */
+	public function updateUserBirthday(string $userBirthday, int $userId): void
+    {
+        $user = ['last_name' => $userBirthday];
+        $this->userRepositoryInterface->updateUser($user, $userId);
+    }
+
+	/**
+	 * userの説明文を更新する
+	 * @param string $userComment
+     * @param int $userId
+	 * @return void
+	 */
+	public function updateUserComment(string $userComment, int $userId): void
+    {
+        $user = ['last_name' => $userComment];
         $this->userRepositoryInterface->updateUser($user, $userId);
     }
 }
