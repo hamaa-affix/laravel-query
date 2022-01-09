@@ -44,7 +44,6 @@ class UserService implements UserServiceInterface
             'birthday'   => $birthDay ?? null,
             'age'        => (int) $userParams['age'],
             'attribute'  => (int) $userParams['attribute'],
-            'family_id'  => $userParams['family_id'] ?? null,
             'email'      => $userParams['email'],
             'comment'    => $userParams['comment'] ?? null,
             'password'   => Hash::make($userParams['password']),
@@ -141,7 +140,7 @@ class UserService implements UserServiceInterface
 	 */
 	public function updateUserTel(string $userTel, int $userId): void
     {
-        $user = ['last_name' => $userTel];
+        $user = ['tel' => $userTel];
         $this->userRepositoryInterface->updateUser($user, $userId);
     }
 
@@ -153,7 +152,7 @@ class UserService implements UserServiceInterface
 	 */
 	public function updateUserEmail(string $userEmail, int $userId): void
     {
-        $user = ['last_name' => $userEmail];
+        $user = ['emal' => $userEmail];
         $this->userRepositoryInterface->updateUser($user, $userId);
     }
 
@@ -165,7 +164,7 @@ class UserService implements UserServiceInterface
 	 */
 	public function updateUserAge(int $userAge, int $userId): void
     {
-        $user = ['last_name' => $userAge];
+        $user = ['age' => $userAge];
         $this->userRepositoryInterface->updateUser($user, $userId);
     }
 
@@ -177,7 +176,7 @@ class UserService implements UserServiceInterface
 	 */
 	public function updateUserBirthday(string $userBirthday, int $userId): void
     {
-        $user = ['last_name' => $userBirthday];
+        $user = ['birthday' => $userBirthday];
         $this->userRepositoryInterface->updateUser($user, $userId);
     }
 
@@ -189,7 +188,7 @@ class UserService implements UserServiceInterface
 	 */
 	public function updateUserComment(string $userComment, int $userId): void
     {
-        $user = ['last_name' => $userComment];
+        $user = ['comment' => $userComment];
         $this->userRepositoryInterface->updateUser($user, $userId);
     }
 }

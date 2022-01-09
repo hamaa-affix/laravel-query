@@ -11,7 +11,7 @@ class UserId
 
     public function __construct(int $userId)
     {
-        if(self::isInt($userId) && self::isUnsined($userId)) throw new Exception('userIdが正しくありません'); 
+        if(!(self::isInt($userId) && self::isUnsined($userId))) throw new Exception('userIdが正しくありません'); 
 
         $this->userId = $userId;
     }
