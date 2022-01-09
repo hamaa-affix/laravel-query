@@ -7,6 +7,7 @@ use packages\Domain\ValueObjects\EmailAddress;
 use packages\Domain\ValueObjects\TelephoneNumber;
 use packages\Domain\ValueObjects\User\Age;
 use packages\Domain\ValueObjects\User\UserAttribute;
+use packages\Domain\ValueObjects\User\UserComment;
 use packages\Domain\ValueObjects\User\UserFirstName;
 use packages\Domain\ValueObjects\User\UserId;
 use packages\Domain\ValueObjects\User\UserLasttName;
@@ -40,6 +41,9 @@ class UserModel
     /** @var int $attribute */
     private int $attribute;
 
+    /** @var string $comment */
+    private string $comment;
+
     /**
      * factory methodを使用する為にprivateにしておく
      */
@@ -59,7 +63,8 @@ class UserModel
         TelephoneNumber $tel,
         EmailAddress $email,
         string $password,
-        UserAttribute $attribute
+        UserAttribute $attribute,
+        UserComment $comment
     ): UserModel
     {
         $user = new UserModel();
@@ -72,6 +77,7 @@ class UserModel
         $user->email = $email;
         $user->password = $password ?? null; //初期値的な意味合い？ つかまわし可能なobjectにしたい？？
         $user->attribute = $attribute;
+        $user->comment = $comment;
 
         return $user;
     }
@@ -97,7 +103,8 @@ class UserModel
         string $tel,
         string $email,
         string $password = null,
-        int $attribute
+        int $attribute,
+        string $comment
     ): UserModel
     {
         $user = self::create(
@@ -108,7 +115,8 @@ class UserModel
             TelephoneNumber::reconstruct($tel),
             EmailAddress::reconstruct($email),
             $password, 
-            UserAttribute::reconstruct($attribute)
+            UserAttribute::reconstruct($attribute),
+            UserComment::reconstruct($comment),
         );
 
         $user->fullName = $this->getFullName();
@@ -181,10 +189,19 @@ class UserModel
 
     /**
      * userステータスを返却します
-     * @string
+     * @return string
      */
     public function getAttribute(): string
     {
         return $this->attribute;
+    }
+
+    /**
+     * userの個人説明文を返却します
+     * @return string
+     */
+    public function getComment(): string
+    {
+        return $this->comment;
     }
 }

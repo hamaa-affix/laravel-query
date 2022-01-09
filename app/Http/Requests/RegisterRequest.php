@@ -32,6 +32,7 @@ class RegisterRequest extends FormRequest
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'birth_day' => ['nullable', 'date'],
             'age' => ['required', 'integer', 'regex:/^\d{1,10}$/'],
+            'comment' => ['nullable', 'string', 'max:500'],
             'attribute' => ['required', 'integer', 'regex:/^[0-2]$/']
         ];
     }

@@ -77,7 +77,8 @@ class EloquentUserRepository implements UserRepositoryInterface
 			$user->tel,
 			$user->email,
 			$user->password,
-			$user->attribute
+			$user->attribute,
+			$user->comment
 		);
 	}
 }
