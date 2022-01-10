@@ -21,5 +21,5 @@ interface ImageRepositoryInterface
      * @param Image $image
      * @return void
      */
-    public function store(Image $iamge): void
+    public function store(Image $iamge): void;
 }
