@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Log;
 
 class RegisterRequest extends FormRequest
 {
@@ -25,11 +26,12 @@ class RegisterRequest extends FormRequest
      */
     public function rules()
     {
+        //Log::debug("来てるよ", $this->all());
         return [
             'firstName' => ['required', 'string', 'max:255'],
             'lastName' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['required', 'string', 'min:8'],
             'birth_day' => ['nullable', 'date'],
             'age' => ['required', 'integer', 'regex:/^\d{1,10}$/'],
             'comment' => ['nullable', 'string', 'max:500'],
