@@ -81,7 +81,11 @@ class AuthenticateController extends Controller {
         }
 
         // all good so return the token
-        return response()->json(compact('token'));
+        return response()->json([
+            'token' => $token,
+            'status' => Response::HTTP_OK,
+            'message' => trans('message.success.auth.login')
+        ]);
     }
 
     /**
