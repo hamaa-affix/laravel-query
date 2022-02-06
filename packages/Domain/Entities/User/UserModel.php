@@ -2,6 +2,7 @@
 
 namespace packages\Domain\Entities\User;
 
+use App\Models\Family;
 use Illuminate\Support\Facades\Hash;
 use packages\Domain\ValueObjects\EmailAddress;
 use packages\Domain\ValueObjects\TelephoneNumber;
@@ -11,11 +12,12 @@ use packages\Domain\ValueObjects\User\UserComment;
 use packages\Domain\ValueObjects\User\UserFirstName;
 use packages\Domain\ValueObjects\User\UserId;
 use packages\Domain\ValueObjects\User\UserLasttName;
+use packages\Domain\ValueObjects\User\FamilyId;
 
 class UserModel
 {  
     /** @var int $userId */
-    private int $userId;
+    private ?int $userId;
 
     /** @var string $firstName */
     private string $firstName;
@@ -44,6 +46,17 @@ class UserModel
     /** @var string $comment */
     private string $comment;
 
+    /** @var int $familyId */
+    private int $familyId;
+
+    /*
+        集約。
+        生成を強制させること。-> データの生合成を担保する為
+        ミューテーションを記述すること -> データの変更があっても、正い値を担保できる
+        モデルのドメインルールやビジネスロジックの置き場はここ
+        usecaseはドメインモデルを使用するだけ。
+     */
+
     /**
      * factory methodを使用する為にprivateにしておく
      */
@@ -64,7 +77,8 @@ class UserModel
         EmailAddress $email,
         string $password,
         UserAttribute $attribute,
-        UserComment $comment
+        UserComment $comment,
+        FamilyId $familyId
     ): UserModel
     {
         $user = new UserModel();
@@ -75,9 +89,10 @@ class UserModel
         $user->age = $age;
         $user->tel = $tel;
         $user->email = $email;
-        $user->password = $password ?? null; //初期値的な意味合い？ つかまわし可能なobjectにしたい？？
+        $user->password = $password; //初期値的な意味合い？ つかまわし可能なobjectにしたい？？
         $user->attribute = $attribute;
         $user->comment = $comment;
+        $user->familyId = $familyId;
 
         return $user;
     }
@@ -104,7 +119,8 @@ class UserModel
         string $email,
         string $password = null,
         int $attribute,
-        string $comment
+        string $comment,
+        int $familyId
     ): UserModel
     {
         $user = self::create(
@@ -117,6 +133,7 @@ class UserModel
             $password, 
             UserAttribute::reconstruct($attribute),
             UserComment::reconstruct($comment),
+            FamilyId::reconstruct($familyId)
         );
 
         $user->fullName = $this->getFullName();

@@ -42,7 +42,7 @@ class UserComment
      */
     public function maxLength(string $comment): bool
     {
-        if(mb_strlen($comment) > 500) return true;
+        if(mb_strlen($comment) >= 500) return true;
 
         return false;
     }

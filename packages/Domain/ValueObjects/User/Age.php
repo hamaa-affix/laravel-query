@@ -34,7 +34,8 @@ class Age
      */
     public function isInt(int $age): bool
     {
-        return is_int($age); 
+        if(preg_match("/^[0-9]+$/", $age)) return true;
+        return false; 
     }
 
     /**
