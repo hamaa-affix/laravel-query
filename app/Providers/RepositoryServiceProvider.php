@@ -3,8 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Repositories\Interfaces\UserRepositoryInterface;
-use App\Repositories\EloquentUserRepository;
+use packages\Domain\Entities\User\UserRepositoryInterface;
+use packages\Domain\Infrastructuer\UserRepository;
 
 /**
  * repositoryクラスの依存関係を定義するProvider
@@ -29,12 +29,14 @@ class RepositoryServiceProvider extends ServiceProvider
     public function register()
     {
         // repository
-        foreach (self::MODELS as $model) {
-            $this->app->bind(
-                "App\Repositories\Interfaces\\{$model}RepositoryInterface",
-                "App\Repositories\Eloquent{$model}Repository"
-            );
-        }
+        // foreach (self::MODELS as $model) {
+        //     $this->app->bind(
+        //         "App\Repositories\Interfaces\\{$model}RepositoryInterface",
+        //         "App\Repositories\Eloquent{$model}Repository"
+        //     );
+        // }
+
+        $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
     }
 
     /**

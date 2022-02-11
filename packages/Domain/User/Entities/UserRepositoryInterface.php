@@ -1,9 +1,9 @@
 <?php
 
-namespace packages\Domain\Entities\User;
+namespace packages\Domain\User\Entities;
 
-use packages\Domain\Entities\User\UserModel;
-use packages\Domain\ValueObjects\User\FamilyId;
+use packages\Domain\User\Entities\UserModel;
+use packages\Domain\User\ValueObjects\FamilyId;
 
 interface UserRepositoryInterface
 {

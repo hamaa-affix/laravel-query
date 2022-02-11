@@ -2,17 +2,17 @@
 
 namespace packages\Domain\UserService;
 
-use packages\Domain\ValueObjects\User\UserId;
-use packages\Domain\Entities\User\UserModel;
-use packages\Domain\Entities\User\UserRepositoryInterface;
-use packages\Domain\ValueObjects\EmailAddress;
-use packages\Domain\ValueObjects\TelephoneNumber;
-use packages\Domain\ValueObjects\User\Age;
-use packages\Domain\ValueObjects\User\FamilyId;
-use packages\Domain\ValueObjects\User\UserAttribute;
-use packages\Domain\ValueObjects\User\UserComment;
-use packages\Domain\ValueObjects\User\UserFirstName;
-use packages\Domain\ValueObjects\User\UserLasttName;
+use packages\Domain\User\ValueObjects\UserId;
+use packages\Domain\User\Entities\UserModel;
+use packages\Domain\User\Entities\UserRepositoryInterface;
+use packages\Domain\User\ValueObjects\EmailAddress;
+use packages\Domain\User\ValueObjects\TelephoneNumber;
+use packages\Domain\User\ValueObjects\Age;
+use packages\Domain\User\ValueObjects\FamilyId;
+use packages\Domain\User\ValueObjects\UserAttribute;
+use packages\Domain\User\ValueObjects\UserComment;
+use packages\Domain\User\ValueObjects\UserFirstName;
+use packages\Domain\User\ValueObjects\UserLasttName;
 
 final class UserRefisterService
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace packages\Domain\Infrastructuer;
+namespace packages\Domain\User\Infrastructuer;
 
 use App\Models\Family;
 use App\Models\User;
-use packages\Domain\Entities\User\UserModel;
-use packages\Domain\Entities\User\UserRepositoryInterface;
-use packages\Domain\ValueObjects\User\FamilyId;
+use packages\Domain\User\Entities\UserModel;
+use packages\Domain\User\Entities\UserRepositoryInterface;
+use packages\Domain\User\ValueObjects\FamilyId;
 
 class UserRepository implements UserRepositoryInterface
 {
