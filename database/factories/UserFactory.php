@@ -20,13 +20,16 @@ use Illuminate\Support\Facades\Hash;
 
 $factory->define(User::class, function (Faker $faker) {
     return [
+        'id' => (string) Str::orderedUuid(),
         'first_name' => $faker->firstName,
         'last_name' => $faker->lastName,
         'age' => rand(20, 45),
-        'attribute' => rand(0, 2),
+        'attribute' => rand(0, 1),
         'tel' => $faker->phoneNumber,
         'email' => $faker->email,
+        'comment' => $faker->realText(),
         'password' => Hash::make($faker->password()),
+        'family_id' => Str::orderedUuid(),
         'remember_token' => Str::random(10),
     ];
 });

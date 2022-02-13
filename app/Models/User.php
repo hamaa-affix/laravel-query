@@ -6,11 +6,30 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable implements JWTSubject {
     use Notifiable;
     use SoftDeletes;
-    
+
+    // プライマリーキーのカラム名
+    protected $primaryKey = 'id';
+
+    // プライマリーキーの型
+    protected $keyType = 'string';
+
+    // プライマリーキーは自動連番か？
+    public $incrementing = false;
+
+    protected static function boot()
+    {
+        parent::boot();
+        // レコード作成時にprimary keyに自動的にuuidを入れてくれるようにする
+        static::creating(function ($model) {
+            $model->{$model->getKeyName()} = (string) Str::orderedUuid();
+        });
+    }
+
     protected $guarded = [];
     /**
      * The attributes that should be hidden for arrays.

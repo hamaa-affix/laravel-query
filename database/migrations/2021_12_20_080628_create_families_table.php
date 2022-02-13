@@ -14,7 +14,7 @@ class CreateFamiliesTable extends Migration
     public function up()
     {
         Schema::create('families', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->timestamps();
             $table->softDeletes();
         });
