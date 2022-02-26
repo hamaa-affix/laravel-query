@@ -1,6 +1,6 @@
 <?php
 
-namespace packages\Domain\User\Infrastructuer;
+namespace packages\Infrastractuer\User;
 
 use App\Models\Family;
 use App\Models\User;
@@ -17,23 +17,18 @@ class UserRepository implements UserRepositoryInterface
      */
     public function register(UserModel $user): UserModel
     {
-        $userDta = User::create([
-            'first_name' => $user->getFirstName(),
+        return User::create([
+            'id' => $user->getUserId(),
+            'fist_name' => $user->getFirstName(),
             'last_name' => $user->getLastName(),
+            'age' => $user->getAge(),
+            'tel' => $user->getTel(),
+            'email' => $user->getEmail(),
+            'password' => $user->getPassword(),
+            'attribute' => $user->getAttribute(),
+            'comment' => $user->getComment(),
+            'family_id' => $user->getFamilyId(),
         ]);
-
-        return UserModel::create(
-            $userDta->userId,
-            $userDta->firstName,
-            $userDta->lastName,
-            $userDta->age,
-            $userDta->tel,
-            $userDta->email,
-            $userDta->password,
-            $userDta->attribute,
-            $userDta->comment,
-            $userDta->familyId
-        );
     }
 
     /**
@@ -43,8 +38,8 @@ class UserRepository implements UserRepositoryInterface
      */
     public function createFamilyId(): FamilyId
     {
-        $familyId = Family::create();
-        
-        return FamilyId::reconstruct($familyId);
+        $family = Family::create();
+
+        return new FamilyId($family->id);
     }
 }
