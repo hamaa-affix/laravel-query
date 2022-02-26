@@ -2,7 +2,6 @@
 
 namespace packages\Domain\User\Entities;
 
-use Illuminate\Support\Facades\Hash;
 use packages\Domain\User\ValueObjects\UserId;
 use packages\Domain\User\ValueObjects\EmailAddress;
 use packages\Domain\User\ValueObjects\TelephoneNumber;
@@ -11,42 +10,42 @@ use packages\Domain\User\ValueObjects\FamilyId;
 use packages\Domain\User\ValueObjects\UserAttribute;
 use packages\Domain\User\ValueObjects\UserComment;
 use packages\Domain\User\ValueObjects\UserFirstName;
-use packages\Domain\User\ValueObjects\UserLasttName;
+use packages\Domain\User\ValueObjects\UserLastName;
 
 class UserModel
 {  
-    /** @var int $userId */
-    private ?int $userId;
+    /** @var UserId $userId */
+    private UserId $userId;
 
-    /** @var string $firstName */
-    private string $firstName;
+    /** @var UserFirstName $firstName */
+    private UserFirstName $firstName;
 
-    /** @var string $lastName */
-    private string $lastName;
+    /** @var UserLastName $lastName */
+    private UserLastName $lastName;
 
     /** @var string $fullName */
     private string $fullName;
 
-    /** @var int $age */
-    private int $age;
+    /** @var Age $age */
+    private Age $age;
 
-    /** @var string $tel*/
-    private string $tel;
+    /** @var TelephoneNumber $tel*/
+    private TelephoneNumber $tel;
 
-    /** @var string $email */
-    private string $email;
+    /** @var EmailAddress $email */
+    private EmailAddress $email;
 
     /** @var string $password */
     private string $password;
 
-    /** @var int $attribute */
-    private int $attribute;
+    /** @var UserAttribute $attribute */
+    private UserAttribute $attribute;
 
-    /** @var string $comment */
-    private string $comment;
+    /** @var UserComment $comment */
+    private UserComment $comment;
 
-    /** @var int $familyId */
-    private int $familyId;
+    /** @var FamilyId $familyId */
+    private FamilyId $familyId;
 
     /*
         集約。
@@ -60,17 +59,24 @@ class UserModel
      * factory methodを使用する為にprivateにしておく
      */
     private function __construct(){}
+
     /**
-     * ファクトリーメソッド
-     * ビジネスロジックはどうするの?
-     * 基本的にrepositoryで取得した値に対して、Entityで形成して、インスタンとしてserviceに返している
-     * 
+     * form空の入力値をfactory
+     *
+     * @param UserFirstName $firstName
+     * @param UserLastName $lastName
+     * @param Age $age
+     * @param TelephoneNumber $tel
+     * @param EmailAddress $email
+     * @param string $password
+     * @param UserAttribute $attribute
+     * @param UserComment $comment
+     * @return self
      */
-    public static function create
+    public static function formInit
     (
-        UserId $userId,
         UserFirstName $firstName,
-        UserLasttName $lastName,
+        UserLastName $lastName,
         Age $age,
         TelephoneNumber $tel,
         EmailAddress $email,
@@ -78,6 +84,41 @@ class UserModel
         UserAttribute $attribute,
         UserComment $comment,
         FamilyId $familyId
+    ): self
+    {
+        $user = new self();
+
+        $user->firstName = $firstName;
+        $user->lastName = $lastName;
+        $user->age = $age;
+        $user->tel = $tel;
+        $user->email = $email;
+        $user->password = $password;
+        $user->attribute = $attribute;
+        $user->comment = $comment;
+        $user->familyId = $familyId;
+
+        return $user;
+    }
+
+    /**
+     * ファクトリーメソッド
+     * ビジネスロジックはどうするの?
+     * 基本的にrepositoryで取得した値に対して、Entityで形成して、インスタンとしてserviceに返している
+     * 
+     */
+    public static function recreate
+    (
+        UserId $userId,
+        UserFirstName $firstName,
+        UserLastName $lastName,
+        Age $age,
+        TelephoneNumber $tel,
+        EmailAddress $email,
+        string $password,
+        UserAttribute $attribute,
+        UserComment $comment,
+        FamilyId $familyId = null,
     ): UserModel
     {
         $user = new UserModel();
@@ -99,18 +140,18 @@ class UserModel
     /**
      * repositoryからの再構成用メソッド
      *
-     * @param integer $userId
+     * @param string $userId
      * @param string $firstName
      * @param string $lastName
      * @param integer $age
      * @param string $tel
      * @param string $email
      * @param integer $attribute
-     * @return void
+     * @return UserModel
      */
     public function reconstruct
     (
-        int $userId,
+        string $userId,
         string $firstName,
         string $lastName,
         int $age,
@@ -119,34 +160,31 @@ class UserModel
         string $password = null,
         int $attribute,
         string $comment,
-        int $familyId
+        string $familyId
     ): UserModel
     {
-        $user = self::create(
-            UserId::reconstruct($userId), 
-            UserFirstName::reconstruct($firstName), 
-            UserLasttName::reconstruct($lastName), 
-            Age::reconstruct($age), 
-            TelephoneNumber::reconstruct($tel),
-            EmailAddress::reconstruct($email),
+        $user = self::recreate(
+            new UserId($userId), 
+            new UserFirstName($firstName), 
+            new UserLastName($lastName), 
+            new Age($age), 
+            new TelephoneNumber($tel),
+            new EmailAddress($email),
             $password, 
-            UserAttribute::reconstruct($attribute),
-            UserComment::reconstruct($comment),
-            FamilyId::reconstruct($familyId)
+            new UserAttribute($attribute),
+            new UserComment($comment),
+            new FamilyId($familyId)
         );
-
-        $user->fullName = $this->getFullName();
-
         return $user;
     }
 
     /** 
      * userIdを返却します
-     *  @return int
+     *  @return string
     */
-    public function getUserId(): int
+    public function getUserId(): string
     {
-        return $this->userId;
+        return $this->userId->getId();
     }
 
     /**
@@ -155,7 +193,7 @@ class UserModel
      */
     public function getFirstName(): string
     {
-        return $this->firstName;
+        return $this->firstName->getValue();
     }
 
     /**
@@ -164,7 +202,7 @@ class UserModel
      */
     public function getLastName(): string
     {
-        return $this->lastName;
+        return $this->lastName->getValue();
     }
 
     /**
@@ -173,7 +211,7 @@ class UserModel
      */
     public function getFullName(): string
     {
-        return $this->lastName. $this->firstName;
+        return $this->lastName->getValue(). $this->firstName->getValue();
     }
 
     /**
@@ -182,7 +220,7 @@ class UserModel
      */
     public function getAge(): int
     {
-        return $this->age;
+        return $this->age->getValue();
     }
 
     /**
@@ -191,7 +229,7 @@ class UserModel
      */
     public function getTel(): string
     {
-        return $this->tel;
+        return $this->tel->getValue();
     }
 
     /**
@@ -200,7 +238,7 @@ class UserModel
      */
     public function getEmail(): string
     {
-        return $this->email;
+        return $this->email->getValue();
     }
 
     /**
@@ -209,7 +247,7 @@ class UserModel
      */
     public function getAttribute(): string
     {
-        return $this->attribute;
+        return $this->attribute->getValue();
     }
 
     /**
@@ -218,6 +256,47 @@ class UserModel
      */
     public function getComment(): string
     {
-        return $this->comment;
+        return $this->comment->getValue();
     }
+
+    /**
+     * getter of password
+     * @return string
+     */
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    /**
+     * getter of FamilyId
+     * 
+     * @return string
+     */
+    public function getFamilyId(): string
+    {
+        if(!$this->familyId->getId()) return $this->familyId->createId();
+
+        return $this->familyId->getId();
+    }
+
+
+    /**  ミューテーターを記述していく */
+    /**
+     * attributeの値から、user属性を返却します
+     * @param int $attribute
+     * @return string
+     */
+    public function makeAttribute(): string
+    {
+        switch ($this->attribute){
+            case 0:
+                return '父';
+            case 1:
+                return '母';
+            case 2:
+                return '子';
+        }
+    }
+
 }

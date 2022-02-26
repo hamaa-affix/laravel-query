@@ -4,7 +4,7 @@ namespace packages\Domain\User\ValueObjects;
 
 use Exception;
 
-class UserLasttName
+class UserLastName
 {
     /** @var string  @userLastName*/
     private string $userLastName;
@@ -35,5 +35,15 @@ class UserLasttName
     public function isUserLastName(string $userLastName): bool
     {
         return !! $userLastName < 64; 
+    }
+
+    public function getLastName(): string
+    {
+        return $this->userLastName;
+    }
+
+    public function getValue(): string
+    {
+        return $this->userLastName;
     }
 }

@@ -3,40 +3,40 @@
 namespace packages\Domain\User\ValueObjects;
 
 use Exception;
+use Illuminate\Support\Str;
 
 class UserId
 {
-    /** @var int $userId */
-    private int $userId;
+    /** @var string $userId */
+    private string $userId;
 
-    public function __construct(int $userId)
+    public function __construct(
+        string $userId = null
+    )
     {
-        if(!(self::isInt($userId) && self::isUnsined($userId))) throw new Exception('userIdが正しくありません'); 
+        if(is_null($userId)) $this->userId = null;
 
-        $this->userId = $userId;
+        $this->isString($userId)
+            ? $this->userId = $userId
+            : throw new \Exception('有効な値ではありません'); 
     }
 
     /**
      * 別オブジェジェットを生成する場合のファクトリーメソッド
-     * @param int $userId
+     * @param string $userId
      * @return self
      */
-    public static function reconstruct(int $userId): self
+    public static function reconstruct(string $userId): self
     {
-        return new self($userId);
-    }
-    
-    /**
-     * userIdが一意であること
-     */
-    // public function uniqId(int $userId): bool
-    // {
-    //     if($userId){}
-    // }
+        $value =  new self();
+        $value->userId = $userId;
 
-    public static function isUnsined(int $userId): bool
+        return $value;
+    }
+
+    private function isString(string $userId): bool
     {
-        return $userId > 0;
+        return is_string($userId);
     }
 
     /**
@@ -49,19 +49,25 @@ class UserId
     // }
 
     /**
-     * int型であること
+     *getter
+     * @return string
      */
-    public static function isInt(int $userId): bool
+    public function getId(): string
     {
-        return is_int($userId);
+        if(!!$this->userId) return $this->createId();
+
+        return $this->userId;
     }
 
     /**
-     *getter
-     * @return integer
+     * create userId if UserId not fuond or null
+     * 
+     * @return string UUID
      */
-    public function getId(): int
+    public function createId(): string
     {
-        return $this->userId;
+        if($this->userId) throw new \Exception('すでにidは作成済みです');
+
+        return (string) Str::orderedUuid();
     }
 }

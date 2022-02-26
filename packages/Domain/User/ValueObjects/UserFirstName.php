@@ -41,4 +41,14 @@ class UserFirstName
     {
         return $this->userFirstName;
     }
+
+    /**
+     * getter
+     * 
+     * @return string
+     */
+    public function getValue(): string
+    {
+        return $this->userFirstName;
+    }
 }

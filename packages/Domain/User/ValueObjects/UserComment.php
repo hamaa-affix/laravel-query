@@ -47,4 +47,9 @@ class UserComment
         return false;
     }
 
+    public function getValue(): string
+    {
+        return $this->comment;
+    }
+
 }

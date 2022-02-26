@@ -11,7 +11,7 @@ class Age
 
     public function __construct(int $age)
     {
-        if($this->isRange($age) && $this->isInt($age)) throw new Exception('年齢は0 ~ 100までの整数値で登録してください'); 
+        if($this->isRange($age) && !$this->isInt($age)) throw new Exception('年齢は0 ~ 100までの整数値で登録してください'); 
         $this->age = $age;
     }
 
@@ -48,5 +48,10 @@ class Age
         if($age > 0 && $age < 100) return true;
 
         return false;
+    }
+
+    public function getValue(): int
+    {
+        return $this->age;
     }
 }

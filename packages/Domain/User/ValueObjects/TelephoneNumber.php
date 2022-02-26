@@ -39,4 +39,9 @@ class TelephoneNumber
 
         return true;
     }
+
+    public function getValue(): string
+    {
+        return $this->tel;
+    }
 }

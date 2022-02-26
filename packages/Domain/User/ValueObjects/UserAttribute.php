@@ -7,12 +7,12 @@ use Exception;
 class UserAttribute
 {
     /** @var int  @attribute*/
-    private string $attribute;
+    private int $attribute;
 
     public function __construct(int $attribute)
     {
-        if($this->isInt($attribute) && $this->isRegex($attribute)) throw new Exception('名前は最大64文字です');
-        $this->$attribute = $this->makeAttribute($attribute);
+        if(!$this->isRegex($attribute)) throw new Exception('適切な値ではありません');
+        $this->attribute = (int) $attribute;
     }
 
 
@@ -25,41 +25,16 @@ class UserAttribute
     {
         return new self($attribute);
     }
-
-
-    /**
-     * 整数値であること
-     * @param int $attribute
-     * @return bool
-     */
-    public function isInt(int $attribute): bool
-    {
-        return is_int($attribute);
-    }
-
     
     public function isRegex(int $attribute): bool
     {
-        $pattern = '/^[0-2]$/';
-        if(!preg_match($pattern, $attribute)) return false;
+        if(preg_match("/^[0-1]+$/", $attribute)) return true;
 
-        return true;
+        return false;
     }
 
-    /**
-     * attributeの値から、user属性を返却します
-     * @param int $attribute
-     * @return string
-     */
-    public function makeAttribute(int $attribute): string
+    public function getValue(): int
     {
-        switch ($attribute){
-            case 0:
-                return '父';
-            case 1:
-                return '母';
-            case 2:
-                return '子';
-        }
+        return $this->attribute;
     }
 }
