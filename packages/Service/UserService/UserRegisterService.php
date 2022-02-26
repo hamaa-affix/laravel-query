@@ -1,20 +1,18 @@
 <?php
 
-namespace packages\Domain\UserService;
+namespace packages\Service\UserService;
 
-use packages\Domain\User\ValueObjects\UserId;
 use packages\Domain\User\Entities\UserModel;
 use packages\Domain\User\Entities\UserRepositoryInterface;
 use packages\Domain\User\ValueObjects\EmailAddress;
 use packages\Domain\User\ValueObjects\TelephoneNumber;
 use packages\Domain\User\ValueObjects\Age;
-use packages\Domain\User\ValueObjects\FamilyId;
 use packages\Domain\User\ValueObjects\UserAttribute;
 use packages\Domain\User\ValueObjects\UserComment;
 use packages\Domain\User\ValueObjects\UserFirstName;
-use packages\Domain\User\ValueObjects\UserLasttName;
+use packages\Domain\User\ValueObjects\UserLastName;
 
-final class UserRefisterService
+final class UserRegisterService
 {
     /** @var UserRepositoryInterface */
     private UserRepositoryInterface $userRepository;
@@ -33,24 +31,21 @@ final class UserRefisterService
      * 
      * @return Usermodel
      */
-    public function refister(
-        UserId $userId,
+    public function handle(
         UserFirstName $firstName,
-        UserLasttName $lastName,
+        UserLastName $lastName,
         Age $age,
         TelephoneNumber $tel,
         EmailAddress $email,
         string $password,
         UserAttribute $attribute,
-        UserComment $comment,
-        FamilyId $familyId
+        UserComment $comment = null,
     ): UserModel
     {
 
         $familyId = $this->userRepository->createFamilyId();
 
-        $user = UserModel::create(
-            $userId,
+        $user = UserModel::formInit(
             $firstName,
             $lastName,
             $age,
@@ -62,8 +57,8 @@ final class UserRefisterService
             $familyId
         );
 
-        $user = $this->userRepository->register($user);
+        return $this->userRepository->register($user);
 
-        return $user;
+        
     }
 }
