@@ -29,3 +29,5 @@ COPY ./docker/php/php.ini /usr/local/etc/php/php.ini
 COPY ./docker/php/www.conf.patch /usr/local/etc/php-fpm.d/www.conf.patch
 
 WORKDIR /app
+
+ENTRYPOINT /usr/sbin/php-fpm -F 
