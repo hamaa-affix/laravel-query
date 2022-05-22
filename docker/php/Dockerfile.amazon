@@ -1,0 +1,31 @@
+# syntax=docker/dockerfile:1-labs
+FROM amazonlinux:2
+
+RUN <<EOF
+    amazon-linux-extras enable php8.0
+    curl -sL https://rpm.nodesource.com/setup_16.x | bash -
+    yum update -y && \
+    yum install -y \
+    php-cli php-pdo php-fpm php-mysqlnd \
+    php-mbstring \
+    php-pecl-memcached \
+    php-gd \
+    php-apcu \
+    php-xml \
+    systemd \
+    unzip \
+    sudo \
+    redis \
+    nodejs
+
+    rm -rf /var/cache/yum/*
+    yum clean all
+    npm install -g yarn
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin
+    mv /usr/bin/composer.phar /usr/bin/composer
+EOF
+
+COPY ./docker/php/php.ini /usr/local/etc/php/php.ini
+COPY ./docker/php/www.conf.patch /usr/local/etc/php-fpm.d/www.conf.patch
+
+WORKDIR /app
