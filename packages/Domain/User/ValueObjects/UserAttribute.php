@@ -9,23 +9,18 @@ class UserAttribute
     /** @var int  @attribute*/
     private int $attribute;
 
+    private const MAX = 1;
+    private const MIN = 0;
+
     public function __construct(int $attribute)
     {
+        if ($attribute > self::MAX && $attribute < self::MIN)
+            throw new Exception('無効な値です');
         if(!$this->isRegex($attribute)) throw new Exception('適切な値ではありません');
+
         $this->attribute = (int) $attribute;
     }
 
-
-    /**
-     * ファクトリーメソッド
-     * @param int $attribute
-     * @param self
-    */
-    public static function reconstruct(int $attribute)
-    {
-        return new self($attribute);
-    }
-    
     public function isRegex(int $attribute): bool
     {
         if(preg_match("/^[0-1]+$/", $attribute)) return true;
@@ -33,8 +28,13 @@ class UserAttribute
         return false;
     }
 
-    public function getValue(): int
+    public function value(): string
     {
-        return $this->attribute;
+        switch ($this->attribute) {
+            case 0:
+                return 'お父さん';
+            case 1:
+                return ' お母さん';
+        }
     }
 }

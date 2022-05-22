@@ -9,23 +9,16 @@ class Age
     /** @var int  $age*/
     private int $age;
 
+    private const MAX = 100;
+    private const MIN = 0;
+
     public function __construct(int $age)
     {
-        if($this->isRange($age) && !$this->isInt($age)) throw new Exception('年齢は0 ~ 100までの整数値で登録してください'); 
+        if($this->isRange($age) && !$this->isInt($age))
+            throw new Exception('年齢は0 ~ 100までの整数値で登録してください');
+
         $this->age = $age;
     }
-
-
-    /**
-     * ファクトリーメソッド
-     * @param int $age
-     * @param self
-    */
-    public static function reconstruct(int $age)
-    {
-        return new self($age);
-    }
-
 
     /**
      * 整数値であること
@@ -35,7 +28,7 @@ class Age
     public function isInt(int $age): bool
     {
         if(preg_match("/^[0-9]+$/", $age)) return true;
-        return false; 
+        return false;
     }
 
     /**
@@ -45,12 +38,12 @@ class Age
      */
     public function isRange(int $age): bool
     {
-        if($age > 0 && $age < 100) return true;
+        if($age > self::MIN && $age < self::MAX) return true;
 
         return false;
     }
 
-    public function getValue(): int
+    public function value(): int
     {
         return $this->age;
     }

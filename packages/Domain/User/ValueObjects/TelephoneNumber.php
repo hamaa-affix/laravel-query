@@ -9,9 +9,13 @@ class TelephoneNumber
     /** @var string  @tel*/
     private string $tel;
 
+    private const MIN = 0;
+
     public function __construct(string $tel)
     {
-        if($this->isIntWithMaxNum($tel)) throw new Exception('電話番号は適切値ではありません');
+        if(!$this->isIntWithMaxNum($tel) && $tel < self::MIN)
+            throw new Exception('電話番号は適切値ではありません');
+
         $this->tel = $tel;
     }
 
@@ -34,13 +38,13 @@ class TelephoneNumber
      */
     public function isIntWithMaxNum(string $tel): bool
     {
-        $pattern = '/^[0-9]{10, 11}*$/';
-        if(!preg_match($pattern, $tel)) return false; 
+        $pattern = '/^[0-9]{10,11}$/';
+        if(!preg_match($pattern, $tel)) return false;
 
         return true;
     }
 
-    public function getValue(): string
+    public function value(): string
     {
         return $this->tel;
     }

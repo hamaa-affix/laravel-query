@@ -7,48 +7,20 @@ use Exception;
 class UserFirstName
 {
     /** @var string  @userFirstName*/
-    private string $userFirstName;
+    private string $firstName;
 
-    public function __construct(string $userFirstName)
+    private const MAX = 65;
+    private const MIN = 0;
+
+    public function __construct(string $firstName)
     {
-        if($this->isUserFirstName($userFirstName)) throw new Exception('名前は最大64文字です');
-        $this->userFirstName = $userFirstName;
+        if (mb_strlen($firstName) < self::MIN) throw new Exception('名前は１文字以上で入力してください');
+        if (mb_strlen($firstName) > self::MAX) throw new Exception('名前は最大64文字です');
+        $this->firstName = $firstName;
     }
 
-
-    /**
-     * ファクトリーメソッド
-     * @param string $userFirstName
-     * @param self
-    */
-    public static function reconstruct(string $userFirstName)
+    public function value(): string
     {
-        return new self($userFirstName);
-    }
-
-
-    /**
-     * 名前は64文字以内であること。
-     * @param string $userFirstName
-     * @return bool
-     */
-    public function isUserFirstName(string $userFirstName): bool
-    {
-        return !! $userFirstName < 65; 
-    }
-
-    public function getFirstName(): string
-    {
-        return $this->userFirstName;
-    }
-
-    /**
-     * getter
-     * 
-     * @return string
-     */
-    public function getValue(): string
-    {
-        return $this->userFirstName;
+        return $this->firstName;
     }
 }

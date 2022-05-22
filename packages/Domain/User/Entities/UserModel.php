@@ -2,6 +2,7 @@
 
 namespace packages\Domain\User\Entities;
 
+use App\Models\Family;
 use packages\Domain\User\ValueObjects\UserId;
 use packages\Domain\User\ValueObjects\EmailAddress;
 use packages\Domain\User\ValueObjects\TelephoneNumber;
@@ -13,7 +14,7 @@ use packages\Domain\User\ValueObjects\UserFirstName;
 use packages\Domain\User\ValueObjects\UserLastName;
 
 class UserModel
-{  
+{
     /** @var UserId $userId */
     private UserId $userId;
 
@@ -58,23 +59,56 @@ class UserModel
     /**
      * factory methodを使用する為にprivateにしておく
      */
-    private function __construct(){}
+    private function __construct(
+        UserId $userId,
+        UserFirstName $userFirstName,
+        UserLastName $userLastName,
+        Age $age,
+        TelephoneNumber $tel,
+        EmailAddress $email,
+        UserAttribute $attribute,
+        string $password,
+        UserComment $comment,
+        FamilyId $familyId,
+    ){}
 
     /**
-     * form空の入力値をfactory
+     * ファクトリーメソッド
+     * formなどの入力値から構成されるメソッド
      *
-     * @param UserFirstName $firstName
-     * @param UserLastName $lastName
-     * @param Age $age
-     * @param TelephoneNumber $tel
-     * @param EmailAddress $email
-     * @param string $password
-     * @param UserAttribute $attribute
-     * @param UserComment $comment
-     * @return self
      */
-    public static function formInit
+    public static function create
     (
+        UserFirstName $firstName,
+        UserLastName $lastName,
+        Age $age,
+        TelephoneNumber $tel,
+        EmailAddress $email,
+        string $password,
+        UserAttribute $attribute,
+        UserComment $comment,
+    ): UserModel
+    {
+        return new UserModel(
+            $id = new UserId(),
+            $firstName,
+            $lastName,
+            $age,
+            $tel,
+            $email,
+            $attribute,
+            $password,
+            $comment,
+            $familyId = new FamilyId()
+        );
+    }
+
+    /**
+     * repositoryからの再構成用メソッド
+     */
+    public function reconstruct
+    (
+        UserId $id,
         UserFirstName $firstName,
         UserLastName $lastName,
         Age $age,
@@ -84,125 +118,22 @@ class UserModel
         UserAttribute $attribute,
         UserComment $comment,
         FamilyId $familyId
-    ): self
-    {
-        $user = new self();
-
-        $user->firstName = $firstName;
-        $user->lastName = $lastName;
-        $user->age = $age;
-        $user->tel = $tel;
-        $user->email = $email;
-        $user->password = $password;
-        $user->attribute = $attribute;
-        $user->comment = $comment;
-        $user->familyId = $familyId;
-
-        return $user;
-    }
-
-    /**
-     * ファクトリーメソッド
-     * ビジネスロジックはどうするの?
-     * 基本的にrepositoryで取得した値に対して、Entityで形成して、インスタンとしてserviceに返している
-     * 
-     */
-    public static function recreate
-    (
-        UserId $userId,
-        UserFirstName $firstName,
-        UserLastName $lastName,
-        Age $age,
-        TelephoneNumber $tel,
-        EmailAddress $email,
-        string $password,
-        UserAttribute $attribute,
-        UserComment $comment,
-        FamilyId $familyId = null,
     ): UserModel
     {
-        $user = new UserModel();
-
-        $user->userId = $userId;
-        $user->firstName = $firstName;
-        $user->lastName = $lastName;
-        $user->age = $age;
-        $user->tel = $tel;
-        $user->email = $email;
-        $user->password = $password; //初期値的な意味合い？ つかまわし可能なobjectにしたい？？
-        $user->attribute = $attribute;
-        $user->comment = $comment;
-        $user->familyId = $familyId;
-
-        return $user;
-    }
-
-    /**
-     * repositoryからの再構成用メソッド
-     *
-     * @param string $userId
-     * @param string $firstName
-     * @param string $lastName
-     * @param integer $age
-     * @param string $tel
-     * @param string $email
-     * @param integer $attribute
-     * @return UserModel
-     */
-    public function reconstruct
-    (
-        string $userId,
-        string $firstName,
-        string $lastName,
-        int $age,
-        string $tel,
-        string $email,
-        string $password = null,
-        int $attribute,
-        string $comment,
-        string $familyId
-    ): UserModel
-    {
-        $user = self::recreate(
-            new UserId($userId), 
-            new UserFirstName($firstName), 
-            new UserLastName($lastName), 
-            new Age($age), 
-            new TelephoneNumber($tel),
-            new EmailAddress($email),
-            $password, 
-            new UserAttribute($attribute),
-            new UserComment($comment),
-            new FamilyId($familyId)
+        $user = new self(
+            $id,
+            $firstName,
+            $lastName,
+            $age,
+            $tel,
+            $email,
+            $attribute,
+            $password,
+            $comment,
+            $familyId
         );
+
         return $user;
-    }
-
-    /** 
-     * userIdを返却します
-     *  @return string
-    */
-    public function getUserId(): string
-    {
-        return $this->userId->getId();
-    }
-
-    /**
-     * 名前を返却します。
-     * @return string
-     */
-    public function getFirstName(): string
-    {
-        return $this->firstName->getValue();
-    }
-
-    /**
-     * 苗字を返却します。
-     * @return string
-     */
-    public function getLastName(): string
-    {
-        return $this->lastName->getValue();
     }
 
     /**
@@ -211,92 +142,15 @@ class UserModel
      */
     public function getFullName(): string
     {
-        return $this->lastName->getValue(). $this->firstName->getValue();
+        return $this->lastName->value(). $this->firstName->value();
     }
 
     /**
-     * 年齢を返却します。
-     * @return int
+     * hasPassword
+     * @return bool
      */
-    public function getAge(): int
+    public function hasPassword(): bool
     {
-        return $this->age->getValue();
+        return !!$this->password;
     }
-
-    /**
-     * 名前を返却します。
-     * @return string
-     */
-    public function getTel(): string
-    {
-        return $this->tel->getValue();
-    }
-
-    /**
-     * eailを返却します。
-     * @return string
-     */
-    public function getEmail(): string
-    {
-        return $this->email->getValue();
-    }
-
-    /**
-     * userステータスを返却します
-     * @return string
-     */
-    public function getAttribute(): string
-    {
-        return $this->attribute->getValue();
-    }
-
-    /**
-     * userの個人説明文を返却します
-     * @return string
-     */
-    public function getComment(): string
-    {
-        return $this->comment->getValue();
-    }
-
-    /**
-     * getter of password
-     * @return string
-     */
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
-
-    /**
-     * getter of FamilyId
-     * 
-     * @return string
-     */
-    public function getFamilyId(): string
-    {
-        if(!$this->familyId->getId()) return $this->familyId->createId();
-
-        return $this->familyId->getId();
-    }
-
-
-    /**  ミューテーターを記述していく */
-    /**
-     * attributeの値から、user属性を返却します
-     * @param int $attribute
-     * @return string
-     */
-    public function makeAttribute(): string
-    {
-        switch ($this->attribute){
-            case 0:
-                return '父';
-            case 1:
-                return '母';
-            case 2:
-                return '子';
-        }
-    }
-
 }

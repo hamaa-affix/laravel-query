@@ -6,44 +6,21 @@ use Exception;
 
 class UserLastName
 {
-    /** @var string  @userLastName*/
-    private string $userLastName;
+    /** @var string  lastName*/
+    private string $lastName;
 
-    public function __construct(string $userLastName)
+    private const MAX = 65;
+    private const MIN = 0;
+
+    public function __construct(string $lastName)
     {
-        if($this->isUserLastName($userLastName)) throw new Exception('苗字は64文字以下で定義してください'); 
-        $this->userLastName = $userLastName;
+        if(mb_strlen($lastName) < self::MIN) throw new Exception('苗字は１文字以上で入力してください');
+        if(mb_strlen($lastName) > self::MAX) throw new Exception('苗字は64文字以下で入力してください');
+        $this->lastName = $lastName;
     }
 
-
-    /**
-     * ファクトリーメソッド
-     * @param string $userLastName
-     * @param self
-    */
-    public static function reconstruct(string $userLastName)
+    public function value(): string
     {
-        return new self($userLastName);
-    }
-
-
-    /**
-     * 苗字は64文字以内であること。
-     * @param string $userFirstName
-     * @return bool
-     */
-    public function isUserLastName(string $userLastName): bool
-    {
-        return !! $userLastName < 64; 
-    }
-
-    public function getLastName(): string
-    {
-        return $this->userLastName;
-    }
-
-    public function getValue(): string
-    {
-        return $this->userLastName;
+        return $this->lastName;
     }
 }

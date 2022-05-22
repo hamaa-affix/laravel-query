@@ -3,7 +3,6 @@
 namespace packages\Domain\User\ValueObjects;
 
 use Exception;
-
 class EmailAddress
 {
     /** @var string $email */
@@ -15,15 +14,6 @@ class EmailAddress
 
         $this->email = $email;
     }
-
-    // /**
-    //  * repositoryなどで使用する,ファクトリーメソッド
-    //  * @param string $emailAddress
-    //  */
-    // public static function reconstruct(string $email): EmailAddress
-    // {
-    //     return new self($email);
-    // }
 
     /**
      *  正規表現によって、emailアドレスであるかを評価します。
@@ -38,7 +28,7 @@ class EmailAddress
         return false;
     }
 
-    public function getValue(): string
+    public function value(): string
     {
         return $this->email;
     }

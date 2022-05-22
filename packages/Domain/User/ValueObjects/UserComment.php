@@ -8,48 +8,16 @@ class UserComment
 {
     private string $comment;
 
+    private const MAX = 500;
+
     public function __construct(string $comment)
     {
-        if($this->isString($comment) && $this->maxLength($comment)) throw new Exception('説明文が適切な形式ではありません');
+        if (mb_strlen($comment) > self::MAX) throw new Exception('自己紹介文は500文字を超えて入力することはできません');
         $this->comment = $comment;
     }
 
-    /**
-     * ファクトリーメソッド
-     * @param string $comment
-     * @param self
-    */
-    public static function reconstruct(string $comment): self
-    {
-        return new self($comment);
-    }
-
-
-    /**
-     * 文字列であること？？
-     * @param string $comment
-     * @return bool
-     */
-    public function isString(string $comment): bool
-    {
-        return is_string($comment);
-    }
-
-    /**
-     * max length 500
-     * @param string $comment
-     * @return bool
-     */
-    public function maxLength(string $comment): bool
-    {
-        if(mb_strlen($comment) >= 500) return true;
-
-        return false;
-    }
-
-    public function getValue(): string
+    public function value(): string
     {
         return $this->comment;
     }
-
 }
