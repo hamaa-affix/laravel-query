@@ -70,7 +70,17 @@ class UserModel
         string $password,
         UserComment $comment,
         FamilyId $familyId,
-    ){}
+    ){
+        $this->userId = $userId;
+        $this->firstName = $userFirstName;
+        $this->lastName = $userLastName;
+        $this->age = $age;
+        $this->tel = $tel;
+        $this->email = $email;
+        $this->attribute = $attribute;
+        $this->comment = $comment;
+        $this->familyId = $familyId;
+    }
 
     /**
      * ファクトリーメソッド
