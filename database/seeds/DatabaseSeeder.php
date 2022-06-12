@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Family;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -16,5 +17,7 @@ class DatabaseSeeder extends Seeder
         // $this->call(RoomSeeder::class);
         // $this->call(CitySeeder::class);
         // $this->call(ResevationSeeder::class);
+        $this->call(FamilySeeder::class);
+        $this->call(UserSeeder::class);
     }
 }
