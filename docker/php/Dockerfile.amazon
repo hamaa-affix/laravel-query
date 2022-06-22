@@ -26,8 +26,9 @@ RUN <<EOF
 EOF
 
 COPY ./docker/php/php.ini /usr/local/etc/php/php.ini
-COPY ./docker/php/www.conf.patch /usr/local/etc/php-fpm.d/www.conf.patch
+COPY ./docker/php/www.conf /etc/php-fpm.d/www.conf
 
 WORKDIR /app
 
-ENTRYPOINT /usr/sbin/php-fpm -F 
+ENTRYPOINT /usr/sbin/php-fpm -F
+CMD ["php-fpm"]
