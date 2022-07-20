@@ -20,11 +20,13 @@ class UserServiceTest extends TestCase
 
     private UserService $userService;
     private EloquentUserRepository $userRepository;
+    private $user;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
+
+        $this->user = User::factory(1)->create();
         $user = new User();
         $this->userRepository = new EloquentUserRepository($user);
         $this->userService = new UserService($this->userRepository);
@@ -63,19 +65,18 @@ class UserServiceTest extends TestCase
      */
     public function test_userのprofile情報を返却できること()
     {
-        $user = factory(User::class, 1)->create();
-        $profile = $this->userService->getProfile($user[0]->id);
+        $profile = $this->userService->getProfile($this->user[0]->id);
 
         $userData = [
-            'fullName' => $user[0]->last_name. $user[0]->first_name,
-            'age' => $user[0]->age,
-            'birthday' => $user[0]->birthday,
-            'attribute' => $user[0]->attribute,
-            'email' => $user[0]->email,
-            'tel' => $user[0]->tel,
+            'fullName' => $this->user[0]->last_name. $this->user[0]->first_name,
+            'age' => $this->user[0]->age,
+            'birthday' => $this->user[0]->birthday,
+            'attribute' => $this->user[0]->attribute,
+            'email' => $this->user[0]->email,
+            'tel' => $this->user[0]->tel,
         ];
         $this->assertEquals($userData, $profile);
-        
+
     }
 
     /**
@@ -84,7 +85,6 @@ class UserServiceTest extends TestCase
      */
     public function test_user情報を更新できること()
     {
-        $user = factory(User::class, 1)->create();
         $updateUser = [
             'firstName'  => 'mami',
             'lastName'   => 'hamada',
@@ -94,7 +94,7 @@ class UserServiceTest extends TestCase
             'attribute'  => 1,
             'comment'    => "this is hogehoge"
         ];
-    
+
         $compareUserData = [
             'first_name'  => 'mami',
             'last_name'   => 'hamada',
@@ -106,7 +106,7 @@ class UserServiceTest extends TestCase
         ];
 
 
-        $profile = $this->userService->updateProfile($updateUser, $user[0]->id);
+        $profile = $this->userService->updateProfile($updateUser, $this->user[0]->id);
         $this->assertDatabaseHas('users', $compareUserData);
     }
 
@@ -115,17 +115,16 @@ class UserServiceTest extends TestCase
      */
     public function test_名前が更新できること()
     {
-        $user = factory(User::class, 1)->create();
         $updateFirstName = 'mami';
 
         $firstName = new UserFirstName($updateFirstName);
-        $id = new UserId($user[0]->id);
+        $id = new UserId($this->user[0]->id);
 
         $this->userService->updateUserFirstName($firstName, $id);
-        $fetchUserFirstName = $this->userRepository->fetchUser($user[0]->id)->first_name;
-        
+        $fetchUserFirstName = $this->userRepository->fetchUser($this->user[0]->id)->first_name;
+
         $this->assertEquals($fetchUserFirstName, $updateFirstName);
-    
+
     }
 
     /**
@@ -133,12 +132,11 @@ class UserServiceTest extends TestCase
      */
     public function test_苗字が更新できること()
     {
-        $user = factory(User::class, 1)->create();
         $updateLastName = 'kobayashi';
 
-        $this->userService->updateUserLastName($updateLastName, $user[0]->id);
-        $fetchUserLastName = $this->userRepository->fetchUser($user[0]->id)->last_name;
-        
+        $this->userService->updateUserLastName($updateLastName, $this->user[0]->id);
+        $fetchUserLastName = $this->userRepository->fetchUser($this->user[0]->id)->last_name;
+
         $this->assertEquals($fetchUserLastName, $updateLastName);
     }
 
@@ -147,12 +145,11 @@ class UserServiceTest extends TestCase
      */
     public function test_電話番号が更新できること()
     {
-        $user = factory(User::class, 1)->create();
         $updatetel = '090-7777-8888';
 
-        $this->userService->updateUserTel($updatetel, $user[0]->id);
-        $userTel = $this->userRepository->fetchUser($user[0]->id)->tel;
-        
+        $this->userService->updateUserTel($updatetel, $this->user[0]->id);
+        $userTel = $this->userRepository->fetchUser($this->user[0]->id)->tel;
+
         $this->assertEquals($userTel, $updatetel);
     }
 
@@ -161,12 +158,11 @@ class UserServiceTest extends TestCase
      */
     public function test_年齢が更新できること()
     {
-        $user = factory(User::class, 1)->create();
         $updateAge = 32;
 
-        $this->userService->updateUserAge($updateAge, $user[0]->id);
-        $userAge = $this->userRepository->fetchUser($user[0]->id)->age;
-        
+        $this->userService->updateUserAge($updateAge, $this->user[0]->id);
+        $userAge = $this->userRepository->fetchUser($this->user[0]->id)->age;
+
         $this->assertEquals($userAge, $updateAge);
     }
 
@@ -175,12 +171,11 @@ class UserServiceTest extends TestCase
      */
     public function test_説明文が更新できること()
     {
-        $user = factory(User::class, 1)->create();
         $updateComment = "hogehoge";
 
-        $this->userService->updateUserComment($updateComment, $user[0]->id);
-        $fetchUserComment = $this->userRepository->fetchUser($user[0]->id)->comment;
-        
+        $this->userService->updateUserComment($updateComment, $this->user[0]->id);
+        $fetchUserComment = $this->userRepository->fetchUser($this->user[0]->id)->comment;
+
         $this->assertEquals($fetchUserComment, $updateComment);
     }
 
@@ -189,16 +184,15 @@ class UserServiceTest extends TestCase
      */
     public function test_誕生日が更新できること()
     {
-        $user = factory(User::class, 1)->create();
         $updateBirthDay = "1989-09-25";
         $parseDate = Carbon::parse($updateBirthDay)->format('Y-m-d'); //Carbon::parse($now)->format('Y-m-d')
 
-        $this->userService->updateUserBirthday($parseDate, $user[0]->id);
-        $fetchUserBirthday = $this->userRepository->fetchUser($user[0]->id)->birthday;
-        
+        $this->userService->updateUserBirthday($parseDate, $this->user[0]->id);
+        $fetchUserBirthday = $this->userRepository->fetchUser($this->user[0]->id)->birthday;
+
         Log::debug("birthday", ['birthday' => $fetchUserBirthday]);
         $this->assertEquals($fetchUserBirthday, Carbon::parse($parseDate));
     }
 
-    
+
 }

@@ -15,11 +15,6 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-
-        // $user = factory(App\User::class, 3)->make();
-        // $user->each( function($model) {
-        //     $model->save();
-        // });
         $family = Family::first();
         $familyId = Family::all()->pluck('id');
 
@@ -36,7 +31,7 @@ class UserSeeder extends Seeder
         ]);
 
         foreach($familyId as $id) {
-            factory(User::class, 1)->create([
+            User::factory(1)->create([
                 'family_id' => $id
             ]);
         }
