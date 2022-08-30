@@ -1,0 +1,52 @@
+# syntax=docker/dockerfile:1-labs
+FROM amazonlinux:2
+
+############################################################
+# amazon linux extras にphp8.1はないから、yumで入れないといけない
+##############################################################
+RUN <<EOF
+    amazon-linux-extras install epel -y
+    curl -sL https://rpm.nodesource.com/setup_16.x | bash -
+    yum update -y && \
+    yum install -y http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+    yum install -y \
+        php81 \
+        php81-php-mbstring \
+        php81-php-mysqlnd \
+        php81-php-gd \
+        php81-php-xml \
+        php81-php-fpm \
+        php81-pecl-memcached \
+        php81-gd \
+        php81-apcu \
+        php81-xml \
+        systemd \
+        unzip \
+        sudo \
+        redis \
+        nodejs
+
+        alternatives --install /usr/bin/php php /usr/bin/php81 1
+        rm -rf /var/cache/yum/*
+        yum clean all
+        npm install -g yarn
+        sudo curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin
+        mv /usr/bin/composer.phar /usr/bin/composer
+EOF
+
+RUN groupadd nginx
+RUN useradd -m -s /sbin/nologin -u 1300 -g nginx nginx
+RUN chown -R nginx:nginx /var/run/ \
+    && chown -R nginx:nginx /var/log/ \
+    && chown -R nginx:nginx /var/opt/remi/php81/log/ \
+    && chown -R nginx:nginx /var/opt/remi/php81/run/php-fpm/
+USER nginx
+
+COPY ./docker/php/php.ini /etc/opt/remi/php81/php.ini
+COPY ./docker/php/copy.www.conf /etc/opt/remi/php81/php-fpm.d/www.conf
+COPY ./docker/php/copy.php-fpm.conf /etc/opt/remi/php81/php-fpm.conf
+
+WORKDIR /app
+
+ENTRYPOINT /opt/remi/php81/root/usr/sbin/php-fpm -F
+CMD ["php-fpm"]
