@@ -9,8 +9,13 @@ RUN <<EOF
     curl -sL https://rpm.nodesource.com/setup_16.x | bash -
     yum update -y && \
     yum install -y http://rpms.remirepo.net/enterprise/remi-release-7.rpm
-    yum install -y php81 php81-php-mbstring php81-php-mysqlnd php81-php-gd php81-php-xml php81-php-fpm \
-        php-fpm \
+    yum install -y \
+        php81 \
+        php81-php-mbstring \
+        php81-php-mysqlnd \
+        php81-php-gd \
+        php81-php-xml \
+        php81-php-fpm \
         php81-pecl-memcached \
         php81-gd \
         php81-apcu \
@@ -27,19 +32,21 @@ RUN <<EOF
         npm install -g yarn
         sudo curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin
         mv /usr/bin/composer.phar /usr/bin/composer
-
 EOF
 
 RUN groupadd nginx
 RUN useradd -m -s /sbin/nologin -u 1300 -g nginx nginx
 RUN chown -R nginx:nginx /var/run/ \
-   && chown -R nginx:nginx /var/log/
+    && chown -R nginx:nginx /var/log/ \
+    && chown -R nginx:nginx /var/opt/remi/php81/log/ \
+    && chown -R nginx:nginx /var/opt/remi/php81/run/php-fpm/
 USER nginx
 
-COPY ./docker/php/php.ini /usr/local/etc/php/php.ini
-COPY ./docker/php/copy.www.conf /etc/php-fpm.d/www.conf
+COPY ./docker/php/php.ini /etc/opt/remi/php81/php.ini
+COPY ./docker/php/copy.www.conf /etc/opt/remi/php81/php-fpm.d/www.conf
+COPY ./docker/php/copy.php-fpm.conf /etc/opt/remi/php81/php-fpm.conf
 
 WORKDIR /app
 
-ENTRYPOINT /usr/sbin/php-fpm -F
+ENTRYPOINT /opt/remi/php81/root/usr/sbin/php-fpm -F
 CMD ["php-fpm"]
