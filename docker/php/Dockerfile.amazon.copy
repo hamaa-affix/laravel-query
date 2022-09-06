@@ -23,7 +23,7 @@ RUN <<EOF
         systemd \
         unzip \
         sudo \
-        redis \
+        php81-php-redis \
         nodejs
 
         alternatives --install /usr/bin/php php /usr/bin/php81 1
@@ -34,19 +34,22 @@ RUN <<EOF
         mv /usr/bin/composer.phar /usr/bin/composer
 EOF
 
+COPY . /app
+WORKDIR /app
+
 RUN groupadd nginx
 RUN useradd -m -s /sbin/nologin -u 1300 -g nginx nginx
 RUN chown -R nginx:nginx /var/run/ \
     && chown -R nginx:nginx /var/log/ \
     && chown -R nginx:nginx /var/opt/remi/php81/log/ \
-    && chown -R nginx:nginx /var/opt/remi/php81/run/php-fpm/
+    && chown -R nginx:nginx /var/opt/remi/php81/run/php-fpm/ \
+    && chown -R nginx:nginx /app/
 USER nginx
 
 COPY ./docker/php/php.ini /etc/opt/remi/php81/php.ini
 COPY ./docker/php/copy.www.conf /etc/opt/remi/php81/php-fpm.d/www.conf
 COPY ./docker/php/copy.php-fpm.conf /etc/opt/remi/php81/php-fpm.conf
 
-WORKDIR /app
 
 ENTRYPOINT /opt/remi/php81/root/usr/sbin/php-fpm -F
 CMD ["php-fpm"]
